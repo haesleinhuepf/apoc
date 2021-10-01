@@ -6,7 +6,7 @@ from ._utils import generate_feature_stack, _read_something_from_opencl_file
 
 
 class PixelClassifier():
-    def __init__(self, opencl_filename = "temp.cl", max_depth: int = 2, num_ensembles: int = 10):
+    def __init__(self, opencl_filename = "temp_pixel_classifier.cl", max_depth: int = 2, num_ensembles: int = 10):
         """
         A RandomForestClassifier that converts itself to OpenCL after training.
 
@@ -22,12 +22,16 @@ class PixelClassifier():
         """
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
         self.NUM_GROUND_TRUTH_DIMENSIONS_KEY = "num_ground_truth_dimensions = "
+        self.CLASSIFIER_CLASS_NAME_KEY = "classifier_class_name = "
 
         self.max_depth = max_depth
         self.num_ensembles = num_ensembles
 
         self.opencl_file = opencl_filename
         self.classifier = None
+        if self.__class__.__name__ != _read_something_from_opencl_file(opencl_filename, self.CLASSIFIER_CLASS_NAME_KEY, self.__class__.__name__):
+            raise TypeError("Loading '" + self.__class__.__name__ + "' from '" + opencl_filename + "' failed. Wrong classifier type.")
+
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = _read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0)
 
@@ -142,6 +146,7 @@ class PixelClassifier():
         file1 = open(filename, "w")
         file1.write("/*\n")
         file1.write("OpenCL RandomForestClassifier\n")
+        file1.write(self.CLASSIFIER_CLASS_NAME_KEY +  self.__class__.__name__ + "\n")
         file1.write(self.FEATURE_SPECIFICATION_KEY + self.feature_specification + "\n")
         file1.write(self.NUM_GROUND_TRUTH_DIMENSIONS_KEY + str(self.num_ground_truth_dimensions) + "\n")
         file1.write("num_classes = " + str(self.classifier.n_classes_) + "\n")

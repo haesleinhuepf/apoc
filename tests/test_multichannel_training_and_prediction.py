@@ -5,7 +5,7 @@ import numpy as np
 import apoc
 from pathlib import Path
 
-def test_training_and_prediction():
+def test_multichannel_training_and_prediction():
     image = cells3d()
     image_ch1 = image[30, 0]
     image_ch2 = image[30, 1]
@@ -24,7 +24,7 @@ def test_training_and_prediction():
     features = "original gaussian_blur=2 sobel_of_gaussian_blur=2"
 
     # this is where the model will be saved
-    cl_filename = 'test.cl'
+    cl_filename = 'test_pixel_classifier_multichannel.cl'
 
     clf = PixelClassifier(opencl_filename=cl_filename)
     clf.train(features=features, ground_truth=annotation, image=[image_ch1, image_ch2])

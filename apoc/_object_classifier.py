@@ -2,7 +2,7 @@ from ._pixel_classifier import PixelClassifier
 import numpy as np
 
 class ObjectClassifier():
-    def __init__(self, opencl_filename="temp.cl", max_depth: int = 2, num_ensembles: int = 10):
+    def __init__(self, opencl_filename="temp_object_classifier.cl", max_depth: int = 2, num_ensembles: int = 10):
         """
         A RandomForestClassifier for label classification that converts itself to OpenCL after training.
 
