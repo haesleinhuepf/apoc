@@ -18,7 +18,7 @@ def test_generate_feature_stack():
 
     from skimage.io import imsave
     import numpy as np
-    imsave("test.tif", np.asarray(feature_stack[3]))
+    #imsave("test.tif", np.asarray(feature_stack[3]))
 
     print("a")
     assert cle.mean_squared_error(feature_stack[0], image) == 0
