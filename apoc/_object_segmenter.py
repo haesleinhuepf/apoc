@@ -9,7 +9,12 @@ class ObjectSegmenter(PixelClassifier):
 
         self.POSITIVE_CLASS_IDENTIFIER_KEY = "positive_class_identifier = "
 
-        self.positive_class_identifier = int(_read_something_from_opencl_file(opencl_filename, self.POSITIVE_CLASS_IDENTIFIER_KEY, positive_class_identifier))
+        self.positive_class_identifier_from_file = int(_read_something_from_opencl_file(opencl_filename, self.POSITIVE_CLASS_IDENTIFIER_KEY, positive_class_identifier))
+        self.positive_class_identifier = positive_class_identifier
+
+    def train(self, features, ground_truth, image=None):
+        self.positive_class_identifier_from_file = self.positive_class_identifier
+        super().train(features, ground_truth, image)
 
     def to_opencl_file(self, filename, extra_information:str = None):
 
@@ -20,6 +25,7 @@ class ObjectSegmenter(PixelClassifier):
         return super().to_opencl_file(filename=filename, extra_information=extra)
 
     def predict(self, features=None, image=None):
+        self.positive_class_identifier = self.positive_class_identifier_from_file
         result = super().predict(features=features, image=image)
 
         import pyclesperanto_prototype as cle
