@@ -3,13 +3,18 @@ from ._pixel_classifier import PixelClassifier
 class ObjectSegmenter(PixelClassifier):
 
     
-    def __init__(self, opencl_filename = "temp.cl", max_depth: int = 2, num_ensembles: int = 10, positive_class_identifi : int = 2):
-        super(opencl_filename=opencl_filename, max_depth =max_depth, num_ensembles=num_ensembles)
+    def __init__(self, opencl_filename = "temp.cl", max_depth: int = 2, num_ensembles: int = 10, positive_class_identifier : int = 2):
+        super().__init__(opencl_filename=opencl_filename, max_depth =max_depth, num_ensembles=num_ensembles)
         self.positive_class_identifier = positive_class_identifier
 
 
     def to_opencl_file(self, filename, extra_information:str = None):
-        super().to_opencl_file(filename, "positive_class_identifier = " + self.positive_class_identifier + "\n" +  extra_information)
+
+        extra = "positive_class_identifier = " + str(self.positive_class_identifier) + "\n"
+        if extra_information is not None:
+            extra = extra + extra_information
+
+        return super().to_opencl_file(filename=filename, extra_information=extra)
 
     def predict(self, features=None, image=None):
         result = super().predict(features=features, image=image)
