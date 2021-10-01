@@ -3,6 +3,7 @@ from skimage.io import imshow, imsave, imread
 import napari
 import numpy as np
 import apoc
+from pathlib import Path
 
 def test_training_and_prediction():
     image = cells3d()

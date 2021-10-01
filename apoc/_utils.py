@@ -100,7 +100,7 @@ def _apply_operation(operation, image, new_image, numeric_parameter):
     else:
         func(image, new_image, numeric_parameter, numeric_parameter, numeric_parameter)
 
-def _read_something_from_opencl_file(self, opencl_filename, some_key:str, default_value=None):
+def _read_something_from_opencl_file(opencl_filename, some_key:str, default_value=None):
     if not os.path.exists(opencl_filename):
         return default_value
 
