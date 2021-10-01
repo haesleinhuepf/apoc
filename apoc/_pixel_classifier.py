@@ -2,8 +2,7 @@ import warnings
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from ._converter import RFC_to_OCL
-from ._utils import generate_feature_stack
-import os
+from ._utils import generate_feature_stack, _read_something_from_opencl_file
 
 
 class PixelClassifier():
@@ -22,13 +21,15 @@ class PixelClassifier():
             https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
         """
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
+        self.NUM_GROUND_TRUTH_DIMENSIONS_KEY = "num_ground_truth_dimensions = "
 
         self.max_depth = max_depth
         self.num_ensembles = num_ensembles
 
         self.opencl_file = opencl_filename
         self.classifier = None
-        self.feature_specification = self._get_feature_specification_from_opencl_file(opencl_filename)
+        self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
+        self.num_ground_truth_dimensions = _read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0)
 
     def train(self, features, ground_truth, image=None):
         """
@@ -43,10 +44,14 @@ class PixelClassifier():
             2D  or 3D label image with background=0, pixel intensity of label1 = 1, ...
             background pixels will be ignored while training.
         image : ndarray (optional)
-            2D or 3D image. If features are provided as string, the feature stack will be generated from this image.
+            2, 3 or 4D image. If features are provided as string, the feature stack will be generated from this image.
+            If the image has more dimensions thant the ground_truth, then the first dimension is assumed to be channels.
+            Features will then be generated from the channel images independently.
         """
         # make features and convert in the right format
-        features = self._make_features(features, image)
+        self.num_ground_truth_dimensions = len(ground_truth.shape)
+        features = self._make_features_potentially_multichannel(features, image)
+
         self.num_features = len(features)
         X, y = self._to_np(features, ground_truth)
 
@@ -75,7 +80,7 @@ class PixelClassifier():
         if features is None:
             features = self.feature_specification
 
-        features = self._make_features(features, image)
+        features = self._make_features_potentially_multichannel(features, image)
 
         import pyclesperanto_prototype as cle
 
@@ -138,6 +143,7 @@ class PixelClassifier():
         file1.write("/*\n")
         file1.write("OpenCL RandomForestClassifier\n")
         file1.write(self.FEATURE_SPECIFICATION_KEY + self.feature_specification + "\n")
+        file1.write(self.NUM_GROUND_TRUTH_DIMENSIONS_KEY + str(self.num_ground_truth_dimensions) + "\n")
         file1.write("num_classes = " + str(self.classifier.n_classes_) + "\n")
         file1.write("num_features = " + str(self.num_features) + "\n")
         file1.write("max_depth = " + str(self.max_depth) + "\n")
@@ -149,30 +155,6 @@ class PixelClassifier():
         file1.close()
 
         self.opencl_file = filename
-
-    def _get_feature_specification_from_opencl_file(self, opencl_filename):
-        """
-        Reads a feature stack specification from an OpenCL file. It's typically saved there in the header after training.
-
-        Parameters
-        ----------
-        opencl_filename : str
-
-        Returns
-        -------
-        str, see _utils.generate_feature_stack
-        """
-        if not os.path.exists(opencl_filename):
-            return "Custom/unkown"
-
-        with open(opencl_filename) as f:
-            line = ""
-            count = 0
-            while line != "*/" and line is not None and count < 25:
-                count = count + 1
-                line = f.readline()
-                if line.startswith(self.FEATURE_SPECIFICATION_KEY):
-                    return line.replace(self.FEATURE_SPECIFICATION_KEY, "").replace("\n","")
 
     def _to_np(self, features, ground_truth=None):
         """
@@ -203,6 +185,16 @@ class PixelClassifier():
             y = y[mask]
 
             return X, y
+
+    def _make_features_potentially_multichannel(self, features, image):
+        if isinstance(image, list) or isinstance(image, tuple) or (hasattr(image, 'shape') and len(image.shape) > self.num_ground_truth_dimensions):
+            new_features = []
+            for sub_image in image:
+                [new_features.append(f) for f in self._make_features(features, sub_image)]
+            features = new_features
+        else:
+            features = self._make_features(features, image)
+        return features
 
     def _make_features(self, features, image = None):
         """

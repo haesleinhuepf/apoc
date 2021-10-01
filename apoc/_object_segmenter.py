@@ -9,33 +9,9 @@ class ObjectSegmenter(PixelClassifier):
 
         self.POSITIVE_CLASS_IDENTIFIER_KEY = "positive_class_identifier = "
 
-        self.positive_class_identifier = self._get_positive_class_identifier_from_opencl_file(opencl_filename)
+        self.positive_class_identifier = int(_read_something_from_opencl_file(opencl_filename, self.POSITIVE_CLASS_IDENTIFIER_KEY, positive_class_identifier))
         if self.positive_class_identifier is None:
             self.positive_class_identifier = positive_class_identifier
-
-    def _get_positive_class_identifier_from_opencl_file(self, opencl_filename):
-        """
-        Reads the positive class identifier from an OpenCL file. It's typically saved there in the header after training.
-
-        Parameters
-        ----------
-        opencl_filename : str
-
-        Returns
-        -------
-        str, see _utils.generate_feature_stack
-        """
-        if not os.path.exists(opencl_filename):
-            return
-
-        with open(opencl_filename) as f:
-            line = ""
-            count = 0
-            while line != "*/" and line is not None and count < 25:
-                count = count + 1
-                line = f.readline()
-                if line.startswith(self.POSITIVE_CLASS_IDENTIFIER_KEY):
-                    return int(line.replace(self.POSITIVE_CLASS_IDENTIFIER_KEY, "").replace("\n",""))
 
     def to_opencl_file(self, filename, extra_information:str = None):
 

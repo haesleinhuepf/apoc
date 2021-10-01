@@ -1,11 +1,11 @@
-from oclrfc import generate_feature_stack
-import oclrfc
+from apoc import generate_feature_stack
+import apoc
 from skimage.io import imread
 from pathlib import Path
 import pyclesperanto_prototype as cle
 
 def test_generate_feature_stack():
-    root = Path(oclrfc.__file__).parent
+    root = Path(apoc.__file__).parent
     img_path = str(root / '..' / 'demo' / 'blobs.tif')
 
     image = imread(img_path)

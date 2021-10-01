@@ -4,6 +4,7 @@ import pyclesperanto_prototype as cle
 import inspect
 import pyopencl
 from ._feature_sets import PredefinedFeatureSet
+import os
 
 def generate_feature_stack(image, features_specification : Union[str, PredefinedFeatureSet] = None):
     """
@@ -98,3 +99,17 @@ def _apply_operation(operation, image, new_image, numeric_parameter):
         func(image, new_image, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 1.1, numeric_parameter * 1.1, numeric_parameter * 1.1)
     else:
         func(image, new_image, numeric_parameter, numeric_parameter, numeric_parameter)
+
+def _read_something_from_opencl_file(self, opencl_filename, some_key:str, default_value=None):
+    if not os.path.exists(opencl_filename):
+        return default_value
+
+    with open(opencl_filename) as f:
+        line = ""
+        count = 0
+        while line != "*/" and line is not None and count < 25:
+            count = count + 1
+            line = f.readline()
+            if line.startswith(some_key):
+                return line.replace(some_key, "").replace("\n","")
+
