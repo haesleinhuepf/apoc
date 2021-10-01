@@ -4,11 +4,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="oclrfc",
-    version="0.4.1",
+    name="apoc",
+    version="0.5.0",
     author="haesleinhuepf",
     author_email="robert.haase@tu-dresden.de",
-    description="OpenCL-based Random Forest Classifier",
+    description="Accelerated Pixel and Object Classifiers based on OpenCL",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/haesleinhuepf/oclrfc",

@@ -1,7 +1,7 @@
-from ._classifier import OCLRandomForestClassifier
+from ._pixel_classifier import PixelClassifier
 import numpy as np
 
-class OCLRandomForestLabelClassifier():
+class ObjectClassifier():
     def __init__(self, opencl_filename="temp.cl", max_depth: int = 2, num_ensembles: int = 10):
         """
         A RandomForestClassifier for label classification that converts itself to OpenCL after training.
@@ -18,7 +18,7 @@ class OCLRandomForestLabelClassifier():
         """
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
 
-        self.classifier = OCLRandomForestClassifier(opencl_filename=opencl_filename, max_depth=max_depth,
+        self.classifier = PixelClassifier(opencl_filename=opencl_filename, max_depth=max_depth,
                                                     num_ensembles=num_ensembles)
 
         self.classifier.feature_specification = self.classifier._get_feature_specification_from_opencl_file(opencl_filename)

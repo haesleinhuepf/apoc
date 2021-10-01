@@ -6,7 +6,7 @@ from ._utils import generate_feature_stack
 import os
 
 
-class OCLRandomForestClassifier():
+class PixelClassifier():
     def __init__(self, opencl_filename = "temp.cl", max_depth: int = 2, num_ensembles: int = 10):
         """
         A RandomForestClassifier that converts itself to OpenCL after training.
@@ -91,7 +91,7 @@ class OCLRandomForestClassifier():
 
         return output
 
-    def predict_cpu(self, features, image=None):
+    def _predict_cpu(self, features, image=None):
         """
         Apply a scikit-learn RandomForestClassifier to a feature stack.
 
@@ -122,7 +122,7 @@ class OCLRandomForestClassifier():
 
         return result_2d
 
-    def to_opencl_file(self, filename):
+    def to_opencl_file(self, filename, extra_information:str = None):
         """
         Save the trained classifier as OpenCL-file.
 
@@ -142,6 +142,8 @@ class OCLRandomForestClassifier():
         file1.write("num_features = " + str(self.num_features) + "\n")
         file1.write("max_depth = " + str(self.max_depth) + "\n")
         file1.write("num_trees = " + str(self.num_ensembles) + "\n")
+        if extra_information is not None:
+            file1.write(extra_information)
         file1.write("*/\n")
         file1.write(opencl_code)
         file1.close()
@@ -224,3 +226,4 @@ class OCLRandomForestClassifier():
             features = generate_feature_stack(image, features)
 
         return features
+
