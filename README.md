@@ -55,7 +55,6 @@ imshow(classification_result)
 
 ## More detailed examples
 
-To see OpenCL-based Random Forest Classifiers in action, check out the example notebooks:
 * [Object segmentation](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)  
 * [Object classification](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demo_object_classification.ipynb)  
 * [Pixel classifier (including benchmarking)](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/benchmarking_pixel_classifier.ipynb).
@@ -65,20 +64,20 @@ To see OpenCL-based Random Forest Classifiers in action, check out the example n
 
 ## Installation
 
-You can install `oclrfc` via [pip]. Note: you also need [pyopencl](https://documen.tician.de/pyopencl/).
+You can install `apoc` via [pip]. Note: you also need [pyopencl](https://documen.tician.de/pyopencl/).
 
     conda install pyopencl
-    pip install oclrfc
+    pip install apoc
 
 ## Contributing
 
-Contributions are very welcome. Tests can be run with [tox], please ensure
+Contributions are very welcome. Tests can be run with `pytest`, please ensure
 the coverage at least stays the same before you submit a pull request.
 
 ## License
 
 Distributed under the terms of the BSD-3 license,
-"oclrfc" is free and open source software
+"apoc" is free and open source software
 
 ## Issues
 
