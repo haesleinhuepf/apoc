@@ -107,11 +107,13 @@ class PixelClassifier():
 
         parameters['out'] = output
 
+        print(parameters)
+
         cle.execute(None, self.opencl_file, "predict", features[0].shape, parameters)
 
         return output
 
-    def _predict_cpu(self, features, image=None):
+    def _predict_cpu(self, image=None, features=None):
         """
         Apply a scikit-learn RandomForestClassifier to a feature stack.
 
@@ -137,7 +139,7 @@ class PixelClassifier():
 
         feature_stack, _ = self._to_np(features)
 
-        result_1d = self.classifier.predict(feature_stack)  # we subtract 1 to make background = 0
+        result_1d = self.classifier.predict(feature_stack)
         result_2d = result_1d.reshape(image.shape)
 
         return result_2d
