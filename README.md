@@ -14,7 +14,7 @@ import apoc
 image = imread('blobs.tif')
 imshow(image)
 ```
-![img.png](docs/blobs.png)
+![img.png](docs/blobs1.png)
 ```python
 manual_annotations = imread('annotations.tif')
 imshow(manual_annotations, vmin=0, vmax=3)
