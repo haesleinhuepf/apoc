@@ -35,7 +35,7 @@ class PixelClassifier():
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
 
-    def train(self, features, ground_truth, image=None):
+    def train(self, features, ground_truth, image=None, continue_training : bool = False):
         """
         Train a scikit-learn RandomForestClassifier and save it as OpenCL file to disk which
         can be later used for prediction.
@@ -51,6 +51,8 @@ class PixelClassifier():
             2, 3 or 4D image. If features are provided as string, the feature stack will be generated from this image.
             If the image has more dimensions thant the ground_truth, then the first dimension is assumed to be channels.
             Features will then be generated from the channel images independently.
+        continue_training : bool
+            if training was done before, it appends the new data and continues training with the whole dataset.
         """
         # make features and convert in the right format
         self.num_ground_truth_dimensions = len(ground_truth.shape)
@@ -59,8 +61,18 @@ class PixelClassifier():
         self.num_features = len(features)
         X, y = self._to_np(features, ground_truth)
 
+        if continue_training:
+            if (not hasattr(self, "_X")) or (not hasattr(self, "_y")):
+                warnings.warn("Cannot continue training if it wasn't trained before. Will train from scratch instead.")
+            else:
+                X = np.concatenate((self._X, X),0)
+                y = np.concatenate((self._y, y),0)
+
         self.classifier = RandomForestClassifier(max_depth=self.max_depth, n_estimators=self.num_ensembles, random_state=0)
         self.classifier.fit(X, y)
+
+        self._X = X
+        self._y = y
 
         # save as OpenCL
         self.to_opencl_file(self.opencl_file)

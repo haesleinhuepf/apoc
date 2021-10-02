@@ -113,3 +113,6 @@ def _read_something_from_opencl_file(opencl_filename, some_key:str, default_valu
             if line.startswith(some_key):
                 return line.replace(some_key, "").replace("\n","")
 
+def erase_classifier(filename):
+    if os.path.exists(filename):
+        os.remove(filename)
