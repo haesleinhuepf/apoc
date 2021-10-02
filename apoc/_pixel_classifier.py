@@ -107,8 +107,6 @@ class PixelClassifier():
 
         parameters['out'] = output
 
-        print(parameters)
-
         cle.execute(None, self.opencl_file, "predict", features[0].shape, parameters)
 
         return output
