@@ -33,7 +33,7 @@ class PixelClassifier():
             raise TypeError("Loading '" + self.__class__.__name__ + "' from '" + opencl_filename + "' failed. Wrong classifier type.")
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
-        self.num_ground_truth_dimensions = _read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0)
+        self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
 
     def train(self, features, ground_truth, image=None):
         """
