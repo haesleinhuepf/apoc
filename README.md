@@ -14,12 +14,12 @@ import apoc
 image = imread('blobs.tif')
 imshow(image)
 ```
-![img.png](docs/blobs1.png)
+![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/blobs1.png)
 ```python
 manual_annotations = imread('annotations.tif')
 imshow(manual_annotations, vmin=0, vmax=3)
 ```
-![img.png](docs/blobs_annotations1.png)
+![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/blobs_annotations1.png)
 
 ... objects can be segmented ([see full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)):
 ```python
@@ -32,7 +32,7 @@ clf.train(features, manual_annotations, image)
 segmentation_result = clf.predict(image=image)
 cle.imshow(segmentation_result, labels=True)
 ```
-![img.png](docs/blobs_segmentation1.png)
+![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/blobs_segmentation1.png)
 
 ## Object classification
 
@@ -51,7 +51,7 @@ classification_result = classifier.predict(segmentation_result, image)
 
 imshow(classification_result)
 ```
-![img.png](docs/object_classification_result1.png)
+![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/object_classification_result1.png)
 
 ## More detailed examples
 
