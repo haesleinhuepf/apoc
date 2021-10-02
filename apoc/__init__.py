@@ -5,3 +5,5 @@ from ._object_classifier import ObjectClassifier
 from ._utils import generate_feature_stack
 from ._utils import erase_classifier
 from ._feature_sets import PredefinedFeatureSet
+
+__version__ = "0.5.0"
