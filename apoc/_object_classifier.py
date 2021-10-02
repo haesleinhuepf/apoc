@@ -21,8 +21,6 @@ class ObjectClassifier():
         self.classifier = PixelClassifier(opencl_filename=opencl_filename, max_depth=max_depth,
                                                     num_ensembles=num_ensembles)
 
-        self.classifier.feature_specification = self.classifier._get_feature_specification_from_opencl_file(opencl_filename)
-
     def train(self, features: str, labels, sparse_annotation, image=None):
         """
         Train a classifier that can differentiate label types according to intensity, size and shape.
