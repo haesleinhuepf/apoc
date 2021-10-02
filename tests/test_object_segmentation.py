@@ -19,6 +19,6 @@ def test_object_segmentation():
     classifier = apoc.ObjectSegmenter(positive_class_identifier=2)
     classifier.train(feature_specs, gt_image, image)
 
-    result = classifier.predict(feature_specs, image)
+    result = classifier.predict(features=feature_specs, image=image)
 
     assert np.allclose(result, ref_image)

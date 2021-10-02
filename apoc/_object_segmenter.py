@@ -24,7 +24,7 @@ class ObjectSegmenter(PixelClassifier):
 
         return super().to_opencl_file(filename=filename, extra_information=extra)
 
-    def predict(self, features=None, image=None):
+    def predict(self, image=None, features=None):
         self.positive_class_identifier = self.positive_class_identifier_from_file
         result = super().predict(features=features, image=image)
 

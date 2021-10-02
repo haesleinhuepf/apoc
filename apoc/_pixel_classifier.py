@@ -77,17 +77,16 @@ class PixelClassifier():
         # save as OpenCL
         self.to_opencl_file(self.opencl_file)
 
-    def predict(self, features=None, image=None):
+    def predict(self, image=None, features=None):
         """
         Apply an OpenCL-based RandomForestClassifier to a feature stack.
 
         Parameters
         ----------
-        features: list of images or str
-            Either features are provided as a list of images (or image stacks) or as string.
         image : ndarray (optional)
             2D or 3D image. If features are provided as string, the feature stack will be generated from this image.
-
+        features: list of images or str
+            Either features are provided as a list of images (or image stacks) or as string.
 
         Returns
         -------

@@ -19,6 +19,6 @@ def test_training_and_prediction():
     classifier = apoc.PixelClassifier()
     classifier.train(feature_specs, gt_image, image)
 
-    result = classifier.predict(feature_specs, image)
+    result = classifier.predict(features=feature_specs, image=image)
 
     assert np.allclose(result, ref_image)
