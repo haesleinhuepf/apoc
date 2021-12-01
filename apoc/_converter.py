@@ -92,7 +92,7 @@ def RFC_to_OCL(random_forest_classifier):
     """
     trees = random_forest_classifier.estimators_
     num_classes = random_forest_classifier.n_classes_
-    num_inputs = random_forest_classifier.n_features_
+    num_inputs = random_forest_classifier.n_features_in_
 
     output = _ocl_header(num_inputs, num_classes)
     for tree in trees:
