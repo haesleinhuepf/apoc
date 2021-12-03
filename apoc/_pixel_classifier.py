@@ -26,6 +26,7 @@ class PixelClassifier():
 
         self.max_depth = max_depth
         self.num_ensembles = num_ensembles
+        self.output_probability_of_class = -1
 
         self.opencl_file = opencl_filename
         self.classifier = None
@@ -99,7 +100,12 @@ class PixelClassifier():
 
         import pyclesperanto_prototype as cle
 
-        output = cle.create_labels_like(features[0])
+        if self.output_probability_of_class == -1:
+            # produce a label image
+            output = cle.create_labels_like(features[0])
+        else:
+            # produce a probability map
+            output = cle.create(features[0].shape) # create float image
 
         parameters = {}
         for i, f in enumerate(features):
@@ -152,7 +158,7 @@ class PixelClassifier():
         filename : str
 
         """
-        opencl_code = RFC_to_OCL(self.classifier)
+        opencl_code = RFC_to_OCL(self.classifier, self.output_probability_of_class)
 
         file1 = open(filename, "w")
         file1.write("/*\n")

@@ -68,23 +68,34 @@ def _ocl_header(num_inputs, num_classes):
     return output
 
 
-def _ocl_footer(num_classes):
-    output = " float max_s=s0;\n"
-    output += " int cls=1;\n"
-    for i in range(0, num_classes - 1):
-        output += " if (max_s < s" + str(i + 1) + ") {\n  max_s = s" + str(i + 1) + ";\n  cls=" + str(i + 2) + ";\n }\n"
+def _ocl_footer(num_classes, output_probability_of_class : int = -1):
 
-    output += " WRITE_IMAGE (out, POS_out_INSTANCE(x,y,z,0), cls);\n}\n"
+    if output_probability_of_class >= 0:
+        output = " float sum_s=s0;\n"
+        output += " int cls=1;\n"
+        for i in range(0, num_classes - 1):
+            output += " sum_s = sum_s + s" + str(i + 1) + ";\n"
+
+        output += " WRITE_IMAGE (out, POS_out_INSTANCE(x,y,z,0), s" + str(output_probability_of_class) + " / sum_s);\n}\n"
+    else:
+        output = " float max_s=s0;\n"
+        output += " int cls=1;\n"
+        for i in range(0, num_classes - 1):
+            output += " if (max_s < s" + str(i + 1) + ") {\n  max_s = s" + str(i + 1) + ";\n  cls=" + str(
+                i + 2) + ";\n }\n"
+
+        output += " WRITE_IMAGE (out, POS_out_INSTANCE(x,y,z,0), cls);\n}\n"
     return output
 
 
-def RFC_to_OCL(random_forest_classifier):
+def RFC_to_OCL(random_forest_classifier, output_probability_of_class: int =-1):
     """
     Converte a scikit-learn RandomForestClassifier to OpenCL code that mimiks the original
     
     Parameters
     ----------
     random_forest_classifier
+    output_probability_of_class
 
     Returns
     -------
@@ -97,7 +108,7 @@ def RFC_to_OCL(random_forest_classifier):
     output = _ocl_header(num_inputs, num_classes)
     for tree in trees:
         output += DecisionTreeClassifierToOpenCLConverter(tree).to_opencl()
-    output += _ocl_footer(num_classes)
+    output += _ocl_footer(num_classes, output_probability_of_class)
 
     return output
 
