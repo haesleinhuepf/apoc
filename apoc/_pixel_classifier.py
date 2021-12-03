@@ -26,7 +26,7 @@ class PixelClassifier():
 
         self.max_depth = max_depth
         self.num_ensembles = num_ensembles
-        self.output_probability_of_class = -1
+        self.output_probability_of_class = 0
 
         self.opencl_file = opencl_filename
         self.classifier = None

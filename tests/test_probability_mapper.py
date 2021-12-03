@@ -16,7 +16,7 @@ def test_probability_mapper():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.ProbabilityMapper(output_probability_of_class=1)
+    classifier = apoc.ProbabilityMapper(output_probability_of_class=2)
     classifier.train(feature_specs, gt_image, image)
 
     result = classifier.predict(features=feature_specs, image=image)
