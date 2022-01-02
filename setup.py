@@ -11,7 +11,7 @@ setuptools.setup(
     description="Accelerated Pixel and Object Classifiers based on OpenCL",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/haesleinhuepf/oclrfc",
+    url="https://github.com/haesleinhuepf/apoc",
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=["numpy!=1.19.4", "scikit-learn>=0.24.2", "pyclesperanto-prototype>=0.8.0"],
