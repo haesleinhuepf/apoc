@@ -89,5 +89,3 @@ Distributed under the terms of the BSD-3 license,
 ## Issues
 
 If you encounter any problems, please [open a thread on image.sc](https://image.sc) along with a detailed description and tag [@haesleinhuepf](https://github.com/haesleinhuepf).
-
-
