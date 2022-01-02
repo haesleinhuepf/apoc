@@ -1,6 +1,5 @@
 from skimage.data import cells3d
 from skimage.io import imshow, imsave, imread
-import napari
 import numpy as np
 import apoc
 from pathlib import Path
