@@ -1,6 +1,12 @@
 # Accelerated Pixel and Object Classifiers (APOC)
+[![License](https://img.shields.io/pypi/l/apoc.svg?color=green)](https://github.com/haesleinhuepf/apoc/raw/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/apoc.svg?color=green)](https://pypi.org/project/apoc)
+[![Python Version](https://img.shields.io/pypi/pyversions/apoc.svg?color=green)](https://python.org)
+[![tests](https://github.com/haesleinhuepf/apoc/workflows/tests/badge.svg)](https://github.com/haesleinhuepf/apoc/actions)
+[![codecov](https://codecov.io/gh/haesleinhuepf/apoc/branch/main/graph/badge.svg)](https://codecov.io/gh/haesleinhuepf/apoc)
+[![Development Status](https://img.shields.io/pypi/status/apoc.svg)](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha)
 
-[clEsperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [sklearn](https://scikit-learn.org/stable/)
+[clesperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/) to process images together, on a GPU.
 
 ## Object segmentation
 
@@ -65,7 +71,7 @@ imshow(classification_result)
 
 ## Installation
 
-You can install `apoc` via [pip]. Note: you also need [pyopencl](https://documen.tician.de/pyopencl/).
+You can install `apoc` using pip. Note: you need to install [pyopencl](https://documen.tician.de/pyopencl/) in advance using conda:
 
     conda install pyopencl
     pip install apoc
