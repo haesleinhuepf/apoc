@@ -41,9 +41,9 @@ class ObjectClassifier():
         image: intensity image (optional)
 
         """
-        selected_features, gt = self._make_features(features, labels, sparse_annotation, image)
-
         self.classifier.feature_specification = features.replace(",", " ")
+        selected_features, gt = self._make_features(self.classifier.feature_specification , labels, sparse_annotation, image)
+
         self.classifier.train(selected_features, gt)
 
     def predict(self, labels, image=None):
