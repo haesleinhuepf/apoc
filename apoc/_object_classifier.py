@@ -19,7 +19,7 @@ class ObjectClassifier():
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
 
         self.classifier = PixelClassifier(opencl_filename=opencl_filename, max_depth=max_depth,
-                                                    num_ensembles=num_ensembles)
+                                                    num_ensembles=num_ensembles, overwrite_classname=self.__class__.__name__)
 
     def train(self, features: str, labels, sparse_annotation, image=None):
         """
@@ -45,6 +45,8 @@ class ObjectClassifier():
         selected_features, gt = self._make_features(self.classifier.feature_specification , labels, sparse_annotation, image)
 
         self.classifier.train(selected_features, gt)
+        self.classifier.to_opencl_file(self.classifier.opencl_file, overwrite_classname=self.__class__.__name__)
+
 
     def predict(self, labels, image=None):
         """
@@ -150,6 +152,7 @@ class ObjectClassifier():
                     result.append(np.asarray([vector[mask]]))
                 else:
                     result.append(np.asarray([vector]))
+                print(key, result[-1])
 
         if ground_truth is not None:
             return result, ground_truth[mask]

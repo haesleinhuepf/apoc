@@ -6,7 +6,7 @@ from ._utils import generate_feature_stack, _read_something_from_opencl_file
 
 
 class PixelClassifier():
-    def __init__(self, opencl_filename = "temp_pixel_classifier.cl", max_depth: int = 2, num_ensembles: int = 10):
+    def __init__(self, opencl_filename = "temp_pixel_classifier.cl", max_depth: int = 2, num_ensembles: int = 10, overwrite_classname:str = None):
         """
         A RandomForestClassifier that converts itself to OpenCL after training.
 
@@ -15,6 +15,8 @@ class PixelClassifier():
         opencl_filename : str (optional)
         max_depth : int (optional)
         num_ensembles : int (optional)
+        overwrite_classname : str
+            By setting this parameter, a loaded classifier will be checked if it is of this type.
 
         See Also
         --------
@@ -30,7 +32,12 @@ class PixelClassifier():
 
         self.opencl_file = opencl_filename
         self.classifier = None
-        if self.__class__.__name__ != _read_something_from_opencl_file(opencl_filename, self.CLASSIFIER_CLASS_NAME_KEY, self.__class__.__name__):
+
+        classname_to_check = self.__class__.__name__
+        if overwrite_classname is not None:
+            classname_to_check = overwrite_classname
+
+        if classname_to_check != _read_something_from_opencl_file(opencl_filename, self.CLASSIFIER_CLASS_NAME_KEY, self.__class__.__name__):
             raise TypeError("Loading '" + self.__class__.__name__ + "' from '" + opencl_filename + "' failed. Wrong classifier type.")
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
@@ -148,7 +155,7 @@ class PixelClassifier():
 
         return result_2d
 
-    def to_opencl_file(self, filename, extra_information:str = None):
+    def to_opencl_file(self, filename, extra_information:str = None, overwrite_classname:str = None):
         """
         Save the trained classifier as OpenCL-file.
 
@@ -163,7 +170,10 @@ class PixelClassifier():
         file1 = open(filename, "w")
         file1.write("/*\n")
         file1.write("OpenCL RandomForestClassifier\n")
-        file1.write(self.CLASSIFIER_CLASS_NAME_KEY +  self.__class__.__name__ + "\n")
+        if overwrite_classname is not None:
+            file1.write(self.CLASSIFIER_CLASS_NAME_KEY + overwrite_classname + "\n")
+        else:
+            file1.write(self.CLASSIFIER_CLASS_NAME_KEY +  self.__class__.__name__ + "\n")
         file1.write(self.FEATURE_SPECIFICATION_KEY + self.feature_specification + "\n")
         file1.write(self.NUM_GROUND_TRUTH_DIMENSIONS_KEY + str(self.num_ground_truth_dimensions) + "\n")
         file1.write("num_classes = " + str(self.classifier.n_classes_) + "\n")
