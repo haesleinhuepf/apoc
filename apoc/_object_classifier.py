@@ -27,7 +27,7 @@ class ObjectClassifier():
 
         Parameters
         ----------
-        features: Comma separated string containing those:
+        features: Space separated string containing those:
             'area',
             'min_intensity', 'max_intensity', 'sum_intensity', 'mean_intensity', 'standard_deviation_intensity',
             'mass_center_x', 'mass_center_y', 'mass_center_z',
@@ -43,7 +43,7 @@ class ObjectClassifier():
         """
         selected_features, gt = self._make_features(features, labels, sparse_annotation, image)
 
-        self.classifier.feature_specification = features
+        self.classifier.feature_specification = features.replace(",", " ")
         self.classifier.train(selected_features, gt)
 
     def predict(self, labels, image=None):
@@ -95,7 +95,7 @@ class ObjectClassifier():
         else:
             classification_gt = None
 
-        feature_list = features.split(',')
+        feature_list = features.split(' ')
 
         table, gt = self._select_features(pixel_statistics, feature_list, labels, classification_gt)
 
