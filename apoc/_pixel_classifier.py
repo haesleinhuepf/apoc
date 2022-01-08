@@ -172,6 +172,8 @@ class PixelClassifier():
         file1.write("num_trees = " + str(self.num_ensembles) + "\n")
         if extra_information is not None:
             file1.write(extra_information)
+        from apoc import __version__ as version
+        file1.write("apoc_version = " + version + "\n")
         file1.write("*/\n")
         file1.write(opencl_code)
         file1.close()
