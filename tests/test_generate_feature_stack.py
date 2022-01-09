@@ -16,10 +16,6 @@ def test_generate_feature_stack():
 
     assert len(feature_stack) == len(feature_specs.split(" "))
 
-    from skimage.io import imsave
-    import numpy as np
-    #imsave("test.tif", np.asarray(feature_stack[3]))
-
     print("a")
     assert cle.mean_squared_error(feature_stack[0], image) == 0
     print("b")
@@ -32,6 +28,22 @@ def test_generate_feature_stack():
     assert cle.mean_squared_error(feature_stack[4], cle.difference_of_gaussian(image, sigma1_x=4 * 0.9, sigma1_y=4 * 0.9, sigma1_z=4 * 0.9, sigma2_x=4 * 1.1, sigma2_y=4 * 1.1, sigma2_z=4 * 1.1)) == 0
 
 
+def test_generate_feature_stack_default():
+    root = Path(apoc.__file__).parent
+    img_path = str(root / '..' / 'demo' / 'blobs.tif')
+
+    image = imread(img_path)
+
+    feature_specs = None
+
+    feature_stack = generate_feature_stack(image, feature_specs)
+
+    print("a")
+    assert cle.mean_squared_error(feature_stack[0], image) == 0
+    print("b")
+    assert cle.mean_squared_error(feature_stack[1], cle.gaussian_blur(image, sigma_x=2, sigma_y=2, sigma_z=2)) == 0
+    print("c")
+    assert cle.mean_squared_error(feature_stack[2], cle.sobel(cle.gaussian_blur(image, sigma_x=2, sigma_y=2, sigma_z=2))) == 0
 
 
 
