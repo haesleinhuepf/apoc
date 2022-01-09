@@ -221,6 +221,20 @@ class PixelClassifier():
             return X, y
 
     def _make_features_potentially_multichannel(self, features, image):
+        """In case multiple images are provided, we interpret these images as list of channels. Hence, features
+        will be computed for each image individually. All feature images will be collected in a list. Hence, if
+        features A and B are requested for an image I, the final list will be A(I), B(I). If features A and B are
+        requested for image I, J and K, the list will be A(I), B(I), A(J), B(J), A(K), B(K).
+
+        Parameters
+        ----------
+        features: str
+        image: ndimage or list[ndimage] or tuple[ndimage]
+
+        Returns
+        -------
+        list[ndimage]: feature images as list
+        """
         if isinstance(image, list) or isinstance(image, tuple) or (hasattr(image, 'shape') and len(image.shape) > self.num_ground_truth_dimensions):
             new_features = []
             for sub_image in image:

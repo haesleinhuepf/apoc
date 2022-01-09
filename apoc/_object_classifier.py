@@ -49,7 +49,7 @@ class ObjectClassifier():
 
 
     def predict(self, labels, image=None):
-        """
+        """Predict object class from label image and optional intensity image.
 
         Parameters
         ----------
@@ -85,6 +85,23 @@ class ObjectClassifier():
         return result_labels
 
     def _make_features(self, features: str, labels, annotation=None, image=None):
+        """Determine requested features. If annotation is provided, also a ground-truth vector will be returned.
+
+        Parameters
+        ----------
+        features: str
+            see train() function for explanation
+        labels: ndimage (int)
+        annotation: ndimage(int), optional
+            sparse annotation label image
+        image: ndimage, optional
+            intensity image for e.g. mean intensity calculation
+
+        Returns
+        -------
+        table: dict of vectors
+        gt: vector
+        """
 
         import pyclesperanto_prototype as cle
         pixel_statistics = cle.statistics_of_background_and_labelled_pixels(image, labels)
@@ -104,12 +121,43 @@ class ObjectClassifier():
         return table, gt
 
     def _make_touch_matrix(self, labels, touch_matrix = None):
+        """Generate an adjacency graph matrix representing touching object.
+
+        Parameters
+        ----------
+        labels: ndimage
+        touch_matrix: ndimage, optional
+            will be returned in case not none
+
+        Returns
+        -------
+        touch_matrix, see [1]
+
+        See Also
+        --------
+        ..[1] https://github.com/clEsperanto/pyclesperanto_prototype/blob/master/demo/neighbors/mesh_between_touching_neighbors.ipynb
+        """
         if touch_matrix is None:
             import pyclesperanto_prototype as cle
             touch_matrix = cle.generate_touch_matrix(labels)
         return touch_matrix
 
     def _make_distance_matrix(self, labels, distance_matrix = None):
+        """Generate a matrix with (n+1)*(n+1) elements for a label image with n labels. In this matrix, element (x,y)
+        corresponds to the centroid distance between label x and label y.
+
+        Parameters
+        ----------
+        labels: ndimage(int)
+        distance_matrix: ndimage, optional
+            will be returned in case not none
+
+        Returns
+        -------
+        distance_matrix, see [1]
+
+        ..[1] https://github.com/clEsperanto/pyclesperanto_prototype/blob/master/demo/neighbors/mesh_with_distances.ipynb
+        """
         if distance_matrix is None:
             import pyclesperanto_prototype as cle
             centroids = cle.centroids_of_labels(labels)
@@ -120,7 +168,24 @@ class ObjectClassifier():
         return distance_matrix
 
     def _select_features(self, all_features, features_to_select, labels, ground_truth=None):
+        """Provided with all easy-to-determine features, select requested features and calculate the more complicated
+        features.
 
+        Parameters
+        ----------
+        all_features: dict[vector]
+        features_to_select: list[str]
+        labels: ndimage
+        ground_truth: ndimage, optional
+
+        Returns
+        -------
+        result:list[vector]
+            list of vectors corresponding to the requested features. The vectors are shaped (n+1) for n labels. The
+            first element corresponds to background.
+        ground_truth: ndimage
+            selected elements of provided ground truth where it's not 0
+        """
         import pyclesperanto_prototype as cle
         result = []
         touch_matrix = None

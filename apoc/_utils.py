@@ -83,24 +83,48 @@ def generate_feature_stack(image, features_specification : Union[str, Predefined
 
     return result_features
 
-def _apply_operation(operation, image, new_image, numeric_parameter):
+def _apply_operation(operation, input_image, output_image, numeric_parameter):
+    """Apply a given image-filter to an image and save the result into another new_image.
+
+    Parameters
+    ----------
+    operation: callable
+    input_image: ndimage
+    output_image: ndimage
+    numeric_parameter: float or int
+        The filters typically have numeric parameters, such as radius or sigma.
+    """
     func = getattr(cle, operation)
     sig = inspect.signature(func)
     if len(sig.parameters.keys()) == 2:
-        func(image, new_image)
+        func(input_image, output_image)
     elif len(sig.parameters.keys()) == 3:
-        func(image, new_image, numeric_parameter)
+        func(input_image, output_image, numeric_parameter)
     elif len(sig.parameters.keys()) == 4:
-        func(image, new_image, numeric_parameter, numeric_parameter)
+        func(input_image, output_image, numeric_parameter, numeric_parameter)
     elif len(sig.parameters.keys()) == 5:
-        func(image, new_image, numeric_parameter, numeric_parameter, numeric_parameter)
+        func(input_image, output_image, numeric_parameter, numeric_parameter, numeric_parameter)
     elif len(sig.parameters.keys()) == 8:
         # e.g. difference_of_gaussian
-        func(image, new_image, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 1.1, numeric_parameter * 1.1, numeric_parameter * 1.1)
+        func(input_image, output_image, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 1.1, numeric_parameter * 1.1, numeric_parameter * 1.1)
     else:
-        func(image, new_image, numeric_parameter, numeric_parameter, numeric_parameter)
+        func(input_image, output_image, numeric_parameter, numeric_parameter, numeric_parameter)
 
 def _read_something_from_opencl_file(opencl_filename, some_key:str, default_value=None):
+    """APOC's OpenCL files have a header in ini-format. Using this method, we can read entries from that header.
+
+    Parameters
+    ----------
+    opencl_filename: str, filename
+    some_key: str
+        We'll search for a line that starts with that string and return the rest of the line where we found it.
+    default_value
+        If we can't find any line starting with some_key, we return this default value
+
+    Returns
+    -------
+    str
+    """
     if not os.path.exists(opencl_filename):
         return default_value
 
@@ -114,5 +138,11 @@ def _read_something_from_opencl_file(opencl_filename, some_key:str, default_valu
                 return line.replace(some_key, "").replace("\n","")
 
 def erase_classifier(filename):
+    """Deletes a file in case it exists.
+
+    Parameters
+    ----------
+    filename: str
+    """
     if os.path.exists(filename):
         os.remove(filename)

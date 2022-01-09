@@ -3,6 +3,9 @@ import numpy as np
 
 
 class DecisionTreeClassifierToOpenCLConverter:
+    """
+    Converts a decition tree classifier to valid OpenCL code consisting of many if-statements.
+    """
     def __init__(self, decistion_tree_classifier):
         self.n_nodes = decistion_tree_classifier.tree_.node_count
         self.children_left = decistion_tree_classifier.tree_.children_left

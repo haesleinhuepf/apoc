@@ -1,6 +1,19 @@
 from enum import Enum
 
 def _make_feature_definition(filters, radii):
+    """Turns a list of filter names and radii into a string that works as valid feature definition in APOC.
+    E.g. a list of filers ['A', 'B'] and radii [1, 2] will result in:
+    "A=1 A=2 B=1 B=2"
+
+    Parameters
+    ----------
+    filters: list[str]
+    radii: list[int or float]
+
+    Returns
+    -------
+    str
+    """
     result = ""
     for f in filters:
         for r in radii:
@@ -8,6 +21,13 @@ def _make_feature_definition(filters, radii):
     return result.strip()
 
 class PredefinedFeatureSet(Enum):
+    """
+    Predefined feature sets make it easy to select features in a pulldown.
+
+    See Also
+    --------
+    .. https://github.com/haesleinhuepf/apoc/blob/main/demo/feature_stacks.ipynb
+    """
     custom = ""
     small_quick = "original " + _make_feature_definition(["gaussian_blur", "sobel_of_gaussian_blur"], [1])
     medium_quick = _make_feature_definition(["gaussian_blur", "sobel_of_gaussian_blur"], [5])
