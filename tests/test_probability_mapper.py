@@ -19,7 +19,7 @@ def test_probability_mapper():
     classifier = apoc.ProbabilityMapper(output_probability_of_class=2)
     classifier.train(feature_specs, gt_image, image)
 
-    result = classifier.predict(features=feature_specs, image=image)
+    result = classifier.predict(image=image)
 
     assert result.dtype == np.float32
 

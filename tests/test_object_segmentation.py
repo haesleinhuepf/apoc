@@ -19,7 +19,7 @@ def test_object_segmentation():
     classifier = apoc.ObjectSegmenter(positive_class_identifier=2)
     classifier.train(feature_specs, gt_image, image)
 
-    result = classifier.predict(features=feature_specs, image=image)
+    result = classifier.predict(image=image)
 
     assert result.dtype == np.uint32
 
