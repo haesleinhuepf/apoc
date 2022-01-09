@@ -140,7 +140,10 @@ class PixelClassifier():
         -------
         ndimage, 2D or 3D label image with pixel intensity corresponding to classification
         """
-        features = self._make_features(features, image)
+        if features is None:
+            features = self.feature_specification
+
+        features = self._make_features_potentially_multichannel(features, image)
 
         if self.classifier is None:
             warnings.warn("Classifier has not been trained.")
