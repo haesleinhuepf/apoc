@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/haesleinhuepf/apoc",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["numpy!=1.19.4", "scikit-learn>=0.24.2", "pyclesperanto-prototype>=0.8.0"],
+    install_requires=["numpy>=1.21", "scikit-learn>=0.24.2", "pyclesperanto-prototype>=0.8.0"],
     python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",

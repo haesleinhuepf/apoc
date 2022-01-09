@@ -19,7 +19,9 @@ def test_training_and_prediction():
     classifier = apoc.PixelClassifier()
     classifier.train(feature_specs, gt_image, image)
 
-    result = classifier.predict(features=feature_specs, image=image)
+    result = classifier.predict(image=image)
+
+    assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
 
@@ -39,7 +41,9 @@ def test_multichannel_training_and_prediction():
     classifier = apoc.PixelClassifier()
     classifier.train(feature_specs, gt_image, [image, image])
 
-    result = classifier.predict(features=feature_specs, image=[image, image])
+    result = classifier.predict(image=[image, image])
+
+    assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
 
@@ -61,7 +65,9 @@ def test_continue_training_and_prediction():
     classifier.train(feature_specs, gt_image, image, continue_training=True)
     classifier.train(feature_specs, gt_image, image, continue_training=True)
 
-    result = classifier.predict(features=feature_specs, image=image)
+    result = classifier.predict(image=image)
+
+    assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
 
@@ -78,8 +84,8 @@ def test_compare_cpu_gpu_prediction():
     classifier = apoc.PixelClassifier()
     classifier.train(feature_specs, gt_image, image)
 
-    result_cpu = classifier._predict_cpu(features=feature_specs, image=image)
-    result_gpu = classifier.predict(features=feature_specs, image=image)
+    result_cpu = classifier._predict_cpu(image=image)
+    result_gpu = classifier.predict(image=image)
 
     import pyclesperanto_prototype as cle
 
