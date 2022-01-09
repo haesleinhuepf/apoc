@@ -21,4 +21,6 @@ def test_probability_mapper():
 
     result = classifier.predict(features=feature_specs, image=image)
 
+    assert result.dtype == np.float32
+
     assert np.allclose(result, ref_image)

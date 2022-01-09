@@ -21,6 +21,8 @@ def test_training_and_prediction():
 
     result = classifier.predict(features=feature_specs, image=image)
 
+    assert result.dtype == np.uint32
+
     assert np.allclose(result, ref_image)
 
 def test_multichannel_training_and_prediction():
@@ -40,6 +42,8 @@ def test_multichannel_training_and_prediction():
     classifier.train(feature_specs, gt_image, [image, image])
 
     result = classifier.predict(features=feature_specs, image=[image, image])
+
+    assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
 
@@ -62,6 +66,8 @@ def test_continue_training_and_prediction():
     classifier.train(feature_specs, gt_image, image, continue_training=True)
 
     result = classifier.predict(features=feature_specs, image=image)
+
+    assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
 

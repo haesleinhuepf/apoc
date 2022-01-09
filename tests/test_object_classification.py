@@ -2,8 +2,8 @@ import numpy as np
 def test_object_classification():
     image      = np.asarray([[0,0,1,1,2,2,3,3,3,3,3]])
     labels     = np.asarray([[0,0,1,1,1,1,2,2,2,2,2]])
-    annotation = np.asarray([[0,0,0,0,2,0,0,0,0,1,1]])
-    
+    annotation = np.asarray([[0,0,2,2,2,0,0,0,0,1,1]])
+    reference  = np.asarray([[0,0,1,1,1,1,1,1,1,1,1]])
     feature_definition = """
             area
             min_intensity max_intensity sum_intensity mean_intensity standard_deviation_intensity
@@ -17,4 +17,10 @@ def test_object_classification():
     import apoc
     oc = apoc.ObjectClassifier()
     oc.train(feature_definition, labels, annotation, image)
-    oc.predict(labels, image)
+    result = oc.predict(labels, image)
+
+    assert result.dtype == np.uint32
+
+    print(result)
+
+    assert np.allclose(reference, result)
