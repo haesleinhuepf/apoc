@@ -217,7 +217,7 @@ class ObjectClassifier():
                     result.append(np.asarray([vector[mask]]))
                 else:
                     result.append(np.asarray([vector]))
-                print(key, result[-1])
+                # print(key, result[-1])
 
         if ground_truth is not None:
             return result, ground_truth[mask]
