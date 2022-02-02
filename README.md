@@ -35,11 +35,13 @@ imshow(manual_annotations, vmin=0, vmax=3)
 ... objects can be segmented ([see full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)):
 ```python
 # define features: original image, a blurred version and an edge image
-features = features = apoc.PredefinedFeatureSet.medium_quick.value
+features = apoc.PredefinedFeatureSet.medium_quick.value
 
+# Training
 clf = apoc.ObjectSegmenter(opencl_filename='object_segmenter.cl', positive_class_identifier=2)
 clf.train(features, manual_annotations, image)
 
+# Prediction
 segmentation_result = clf.predict(image=image)
 cle.imshow(segmentation_result, labels=True)
 ```
@@ -54,10 +56,10 @@ features = 'area,mean_max_distance_to_centroid_ratio,standard_deviation_intensit
 # Create an object classifier
 classifier = apoc.ObjectClassifier("object_classifier.cl")
 
-# train it
+# Training
 classifier.train(features, segmentation_result, annotation, image)
 
-# determine object classification
+# Prediction / determine object classification
 classification_result = classifier.predict(segmentation_result, image)
 
 imshow(classification_result)
