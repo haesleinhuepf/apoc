@@ -27,7 +27,7 @@ class ObjectSegmenter(PixelClassifier):
         self.positive_class_identifier_from_file = int(_read_something_from_opencl_file(opencl_filename, self.POSITIVE_CLASS_IDENTIFIER_KEY, positive_class_identifier))
         self.positive_class_identifier = positive_class_identifier
 
-    def train(self, features, ground_truth, image=None):
+    def train(self, features, ground_truth, image=None, continue_training : bool = False):
         """Train the classifier with.
 
         See Also
@@ -35,7 +35,7 @@ class ObjectSegmenter(PixelClassifier):
         .. PixelClassifier.train()
         """
         self.positive_class_identifier_from_file = self.positive_class_identifier
-        super().train(features, ground_truth, image)
+        super().train(features, ground_truth, image, continue_training=continue_training)
 
     def to_opencl_file(self, filename, extra_information:str = None):
         """Save the classifier to an OpenCL-file. The file will also contain the selected class identifier.

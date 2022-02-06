@@ -21,7 +21,7 @@ class ObjectClassifier():
         self.classifier = PixelClassifier(opencl_filename=opencl_filename, max_depth=max_depth,
                                                     num_ensembles=num_ensembles, overwrite_classname=self.__class__.__name__)
 
-    def train(self, features: str, labels, sparse_annotation, image=None):
+    def train(self, features: str, labels, sparse_annotation, image=None, continue_training : bool = False):
         """
         Train a classifier that can differentiate label types according to intensity, size and shape.
 
@@ -44,7 +44,7 @@ class ObjectClassifier():
         self.classifier.feature_specification = features.replace(",", " ")
         selected_features, gt = self._make_features(self.classifier.feature_specification , labels, sparse_annotation, image)
 
-        self.classifier.train(selected_features, gt)
+        self.classifier.train(selected_features, gt, continue_training=continue_training)
         self.classifier.to_opencl_file(self.classifier.opencl_file, overwrite_classname=self.__class__.__name__)
 
 

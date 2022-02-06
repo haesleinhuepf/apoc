@@ -11,6 +11,9 @@ This repository contains the backend for python developers. User-friendly plugin
 * [napari-accelerated-pixel-and-object-classification](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification)
 * [clijx-accelerated-pixel-and-object-classification](https://github.com/clij/clijx-accelerated-pixel-and-object-classification)
 
+For training classifiers from pairs of image and label-mask folders, please see 
+[this notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/train_on_folders.ipynb).
+
 ![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/img.png)
 
 ## Object segmentation
