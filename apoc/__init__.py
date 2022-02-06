@@ -8,4 +8,4 @@ from ._utils import erase_classifier
 from ._utils import train_classifier_from_image_folders
 from ._feature_sets import PredefinedFeatureSet
 
-__version__ = "0.6.2"
+__version__ = "0.6.3"
