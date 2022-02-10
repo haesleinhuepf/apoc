@@ -147,7 +147,14 @@ def erase_classifier(filename):
     if os.path.exists(filename):
         os.remove(filename)
 
+
 def list_available_object_classification_features():
+    """List available features for object classifiaction
+
+    Returns
+    -------
+    list(str)
+    """
     import numpy as np
     from pyclesperanto_prototype import statistics_of_labelled_pixels
 
@@ -160,3 +167,51 @@ def list_available_object_classification_features():
         "average_distance_of_n_nearest_neighbors=?",
         "average_distance_of_n_nearest_neighbors=?",
         ]
+
+
+def train_classifier_from_image_folders(classifier, features, **kwargs):
+    """Train any classifier from pairs or tuples of image folders.
+
+    When passing multiple folders for the training, it is necessary that
+    the images in these folders have identical filenames. For example,
+    to train a ObjectSegmenter, you need to pass two folders where the
+    images are organized like this:
+
+    * folder/
+      * images/
+        * image1.tif
+        * image2.tif
+        * image3.tif
+      * masks/
+        * image1.tif
+        * image2.tif
+        * image3.tif
+
+    Parameters
+    ----------
+    classifier: APOC classifier
+        e.g. PixelClassifier, ObjectClassifier, ObjectSegmenter, ProbabilityMapper
+    features: str
+        list of features, space separated
+    kwargs
+        depends on the classifier. See the classifier's train() function for details
+    """
+    import os
+    from skimage.io import imread
+
+    any_folder = kwargs[list(kwargs.keys())[0]]
+    file_list = os.listdir(any_folder)
+    continue_training = False
+    for filename in file_list:
+
+        # assemble parameters for training
+        kwargs_to_pass = {
+            'features': features,
+            'continue_training': continue_training
+        }
+        for key, value in kwargs.items():
+            kwargs_to_pass[key] = imread(kwargs[key] + filename)
+
+        # run training
+        classifier.train(**kwargs_to_pass)
+        continue_training = True

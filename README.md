@@ -7,9 +7,12 @@
 [![Development Status](https://img.shields.io/pypi/status/apoc.svg)](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha)
 
 [clesperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/) to classify pixels and objects in images, on a [GPU](https://en.wikipedia.org/wiki/Graphics_processing_unit) using [OpenCL](https://www.khronos.org/opencl/).
-This repository contains the backend for python developers. User-friendly plugins for [Fiji](https://fiji.sc) and [napar](https://napari.org) can be found here:
+This repository contains the backend for python developers. User-friendly plugins for [Fiji](https://fiji.sc) and [napari](https://napari.org) can be found here:
 * [napari-accelerated-pixel-and-object-classification](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification)
 * [clijx-accelerated-pixel-and-object-classification](https://github.com/clij/clijx-accelerated-pixel-and-object-classification)
+
+For training classifiers from pairs of image and label-mask folders, please see 
+[this notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/train_on_folders.ipynb).
 
 ![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/img.png)
 
@@ -35,11 +38,13 @@ imshow(manual_annotations, vmin=0, vmax=3)
 ... objects can be segmented ([see full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)):
 ```python
 # define features: original image, a blurred version and an edge image
-features = features = apoc.PredefinedFeatureSet.medium_quick.value
+features = apoc.PredefinedFeatureSet.medium_quick.value
 
+# Training
 clf = apoc.ObjectSegmenter(opencl_filename='object_segmenter.cl', positive_class_identifier=2)
 clf.train(features, manual_annotations, image)
 
+# Prediction
 segmentation_result = clf.predict(image=image)
 cle.imshow(segmentation_result, labels=True)
 ```
@@ -54,10 +59,10 @@ features = 'area,mean_max_distance_to_centroid_ratio,standard_deviation_intensit
 # Create an object classifier
 classifier = apoc.ObjectClassifier("object_classifier.cl")
 
-# train it
+# Training
 classifier.train(features, segmentation_result, annotation, image)
 
-# determine object classification
+# Prediction / determine object classification
 classification_result = classifier.predict(segmentation_result, image)
 
 imshow(classification_result)
