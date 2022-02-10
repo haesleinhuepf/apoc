@@ -223,3 +223,6 @@ class ObjectClassifier():
             return result, ground_truth[mask]
         else:
             return result, None
+
+    def statistics(self):
+        return self.classifier.statistics()

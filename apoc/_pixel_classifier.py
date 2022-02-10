@@ -270,3 +270,61 @@ class PixelClassifier():
 
         return features
 
+
+    def statistics(self):
+        """Provide statistics about the trained Random Forest Classifier
+
+        After training or loading a model, this function reads out the decision trees and generates
+        statistics from it. It counts for each decision depth how often given features are taken into
+        account. It returns two dictionaries. Both dictionaries contain the feature names used during
+        training as keys. The values are lists with numbers: The first 'ratios' dictionary contains
+        numbers between 0 and 1. The higher that number, the more often is the given feature taken
+        into account on the given decision level. The second 'count' dictionary contains the count of
+        decisions taking a given feature into account. For example in case the result looks like this:
+
+        A: [0.3, 0.1], [30, 20]
+        B: [0.7, 0.9], [70, 180]
+
+        Feature A was taken into account 30% of the decision trees on the first level and in 10% on
+        the second level. In case of 100 trees, these are 30 trees on the first level and can be up
+        to 20 trees on the second level. Each level doubles the number of available decisions in these
+        binary decision trees.
+
+        Returns
+        -------
+        ratios: dict
+        counts: dict
+        """
+        opencl_filename = self.opencl_file
+
+        # Read information from the header
+        feature_specification = _read_something_from_opencl_file(opencl_filename, "feature_specification =", "") \
+            .replace(",", " ") \
+            .replace("  ", " ") \
+            .strip() \
+            .split(" ")
+
+        max_depth = int(_read_something_from_opencl_file(opencl_filename, "max_depth = ", "0"))
+
+        # Read the whole forest
+        with open(opencl_filename) as f:
+            text = f.read()
+
+        # Analyse forest / count existence of "   if(i0" snippets in the code.
+        counts = {}
+        sums = [0] * max_depth
+        for i, feature in enumerate(feature_specification):
+
+            count = []
+            for num_spaces in range(max_depth):
+                leading_spaces = " " * num_spaces
+                num_appearance = text.count("\n" + leading_spaces + "if(i" + str(i))
+                sums[num_spaces] += num_appearance
+                count.append(num_appearance)
+            counts[feature] = np.asarray(count)
+
+        shares = {}
+        for i, feature in enumerate(feature_specification):
+            shares[feature] = counts[feature] / sums
+
+        return shares, counts
