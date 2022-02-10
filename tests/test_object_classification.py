@@ -24,3 +24,20 @@ def test_object_classification():
     print(result)
 
     assert np.allclose(reference, result)
+
+
+def test_object_classification_statistics():
+    image = np.asarray([[0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3]])
+    labels = np.asarray([[0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2]])
+    annotation = np.asarray([[0, 0, 2, 2, 2, 0, 0, 0, 0, 1, 1]])
+    reference = np.asarray([[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+    feature_definition = """
+            area mean_intensity standard_deviation_intensity touching_neighbor_count
+            """.replace("\n", " ")
+
+    import apoc
+    oc = apoc.ObjectClassifier()
+    oc.train(feature_definition, labels, annotation, image)
+
+    shares, _ = oc.statistics()
+    assert len(shares.keys()) == 4
