@@ -146,3 +146,17 @@ def erase_classifier(filename):
     """
     if os.path.exists(filename):
         os.remove(filename)
+
+def list_available_object_classification_features():
+    import numpy as np
+    from pyclesperanto_prototype import statistics_of_labelled_pixels
+
+    dummy_image = np.asarray([[0,1]])
+    stats = statistics_of_labelled_pixels(dummy_image, dummy_image)
+
+    return list(stats.keys()) + \
+        ["touching_neighbor_count",
+        "average_distance_of_touching_neighbors",
+        "average_distance_of_n_nearest_neighbors=?",
+        "average_distance_of_n_nearest_neighbors=?",
+        ]
