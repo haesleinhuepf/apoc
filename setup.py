@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="apoc",
-    version="0.6.5",
+    version="0.6.6",
     author="haesleinhuepf",
     author_email="robert.haase@tu-dresden.de",
     description="Accelerated Pixel and Object Classifiers based on OpenCL",
