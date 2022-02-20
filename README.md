@@ -5,6 +5,7 @@
 [![tests](https://github.com/haesleinhuepf/apoc/workflows/tests/badge.svg)](https://github.com/haesleinhuepf/apoc/actions)
 [![codecov](https://codecov.io/gh/haesleinhuepf/apoc/branch/main/graph/badge.svg)](https://codecov.io/gh/haesleinhuepf/apoc)
 [![Development Status](https://img.shields.io/pypi/status/apoc.svg)](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha)
+[![DOI](https://zenodo.org/badge/412505712.svg)](https://zenodo.org/badge/latestdoi/412505712)
 
 [clesperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/) to classify pixels and objects in images, on a [GPU](https://en.wikipedia.org/wiki/Graphics_processing_unit) using [OpenCL](https://www.khronos.org/opencl/).
 This repository contains the backend for python developers. User-friendly plugins for [Fiji](https://fiji.sc) and [napari](https://napari.org) can be found here:
