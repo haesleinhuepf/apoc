@@ -70,15 +70,6 @@ class ObjectClassifier():
         selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
         output = self.classifier.predict(selected_features, return_numpy=False)
 
-        # output = cle.create_like(selected_features[0].shape)
-        # parameters = {}
-        # for i, f in enumerate(selected_features):
-        #     parameters['in' + str(i)] = cle.push(f)
-        #
-        # parameters['out'] = output
-        #
-        # cle.execute(None, self.classifier.opencl_file, "predict", selected_features[0].shape, parameters)
-        #
         # set background to zero
         cle.set_column(output, 0, 0)
 
