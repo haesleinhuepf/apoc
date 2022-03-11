@@ -7,15 +7,16 @@ from ._pixel_classifier import PixelClassifier
 
 class TableRowClassifier():
     def __init__(self, opencl_filename="temp_object_classifier.cl", max_depth: int = 2, num_ensembles: int = 10):
-        """
-        A RandomForestClassifier for label classification that converts itself to OpenCL after training.
+        """A RandomForestClassifier for classifying rows of a table that converts itself to OpenCL after training.
 
         Parameters
         ----------
         opencl_filename : str (optional)
+            The path to which the openCL classifier will be saved.
         max_depth : int (optional)
+            The maximum depth of the tree.
         num_ensembles : int (optional)
-
+            The number of trees in the random forest.
         See Also
         --------
             https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
@@ -31,7 +32,10 @@ class TableRowClassifier():
 
     @property
     def ordered_feature_names(self) -> List[str]:
-        """
+        """The feature names used in the order they are used by the classifier.
+
+        This is set by self._prepare_feature_table()
+
         Returns
         -------
         ordered_feature_names : List[str]
@@ -39,24 +43,25 @@ class TableRowClassifier():
         """
         return self._ordered_feature_names
 
-    def train(self, feature_table: Dict[str, Union[List[float], np.ndarray]], gt: np.ndarray, continue_training: bool = False):
-        """
-        Train a classifier that can differentiate label types according to intensity, size and shape.
+    def train(
+        self,
+        feature_table: Dict[str, Union[List[float], np.ndarray]],
+        gt: np.ndarray,
+        continue_training: bool = False
+    ):
+        """Train a classifier that can differentiate classes from rows of pre-calculated features.
 
         Parameters
         ----------
-        features: Space separated string containing those:
-            'area',
-            'min_intensity', 'max_intensity', 'sum_intensity', 'mean_intensity', 'standard_deviation_intensity',
-            'mass_center_x', 'mass_center_y', 'mass_center_z',
-            'centroid_x', 'centroid_y', 'centroid_z',
-            'max_distance_to_centroid', 'max_distance_to_mass_center',
-            'mean_max_distance_to_centroid_ratio', 'mean_max_distance_to_mass_center_ratio',
-            'touching_neighbor_count', 'average_distance_of_touching_neighbors', 'average_distance_of_n_nearest_neighbors'
-        labels: label image
-        sparse_annotation: label image with annotations. If one label is annotated with multiple classes, the
-            maximum is considered while training.
-        image: intensity image (optional)
+        feature_table : Dict[str, Union[List[float], np.ndarray]]
+            The table from which to make the prediction. Each row of the table
+            will be classified. The table can either be a pandas DataFrame or a
+            Dict with string keys (column names) and numpy array columns.
+        gt : np.array
+            The array containing the ground truth class for each row in feature_table
+        continue_training : bool
+            Flag set to true if training is to be continued from an existing classifier.
+            The default value is False.
 
         """
         ordered_features = self._prepare_feature_table(feature_table)
@@ -67,18 +72,24 @@ class TableRowClassifier():
             self,
             feature_table: Dict[str, Union[List[float], np.ndarray]],
             return_numpy: bool = True
-    ) -> List[int]:
-        """Predict object class from label image and optional intensity image.
+    ) -> np.array:
+        """Predict row class from a table.
 
         Parameters
         ----------
-        labels: label image
-        image: intensity image
+        feature_table : Dict[str, Union[List[float], np.ndarray]]
+            The table from which to make the prediction. Each row of the table
+            will be classified. The table can either be a pandas DataFrame or a
+            Dict with string keys (column names) and numpy array columns.
+        return_numpy : bool
+            If True, the resulting predictions are returned as a numpy array.
+            If False, the predictions are returned as a pyopencl array.
+            The default value is True.
 
         Returns
         -------
-        label image representing a semantic segmentation: pixel intensities represent label class
-
+        output : np.ndarray
+            An array containing the predicted class for each row.
         """
         import pyclesperanto_prototype as cle
 
@@ -101,16 +112,48 @@ class TableRowClassifier():
         else:
             return output
 
-    def _prepare_feature_table(self, feature_table) -> List[np.ndarray]:
+    def _prepare_feature_table(
+            self,
+            feature_table: Dict[str, Union[List[float], np.ndarray]]
+    ) -> List[np.ndarray]:
+        """Prepare a feature table for training.
+
+        This coerces the feature table into the form expected by the classifier
+        (list of numpy array) and stores the order of the features.
+
+        Parameters
+        ----------
+        feature_table : Dict[str, Union[List[float], np.ndarray]]
+            The table from which to make the prediction. Each row of the table
+            will be classified. The table can either be a pandas DataFrame or a
+            Dict with string keys (column names) and numpy array columns.
+
+        Returns
+        -------
+        ordered_features : List[np.ndarray]
+            The features stored in a list. The order of the features is
+            specified by self.ordered_feature_names
+        """
         if len(self._ordered_feature_names) == 0:
             # if the feature names haven't previously been stored,
             # store them as a list
             self._ordered_feature_names = list(feature_table.keys())
-        ordered_feature_names = self._ordered_feature_names
-        return [
-            np.asarray(feature_table[feature_name]) for feature_name in ordered_feature_names
-        ]
+        return self.order_feature_table(feature_table)
 
     def order_feature_table(self, feature_table: Dict[str, np.ndarray]) -> List[np.ndarray]:
-        return [np.asarray(feature_table[feature]) for feature in self.ordered_feature_names]
+        """Coerce a feature table into the format required by the classifier.
 
+        Parameters
+        ----------
+        feature_table : Dict[str, Union[List[float], np.ndarray]]
+            The table from which to make the prediction. Each row of the table
+            will be classified. The table can either be a pandas DataFrame or a
+            Dict with string keys (column names) and numpy array columns.
+
+        Returns
+        -------
+        ordered_features : List[np.ndarray]
+            The features stored in a list. The order of the features is
+            specified by self.ordered_feature_names
+        """
+        return [np.asarray(feature_table[feature]) for feature in self.ordered_feature_names]
