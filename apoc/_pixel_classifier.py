@@ -270,7 +270,6 @@ class PixelClassifier():
 
         return features
 
-
     def statistics(self):
         """Provide statistics about the trained Random Forest Classifier
 

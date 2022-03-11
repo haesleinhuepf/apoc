@@ -1,5 +1,6 @@
-from ._pixel_classifier import PixelClassifier
+from ._table_row_classifier import TableRowClassifier
 import numpy as np
+
 
 class ObjectClassifier():
     def __init__(self, opencl_filename="temp_object_classifier.cl", max_depth: int = 2, num_ensembles: int = 10):
@@ -18,8 +19,12 @@ class ObjectClassifier():
         """
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
 
-        self.classifier = PixelClassifier(opencl_filename=opencl_filename, max_depth=max_depth,
-                                                    num_ensembles=num_ensembles, overwrite_classname=self.__class__.__name__)
+        self.classifier = TableRowClassifier(
+            opencl_filename=opencl_filename,
+            max_depth=max_depth,
+            num_ensembles=num_ensembles,
+            overwrite_classname=self.__class__.__name__
+    )
 
     def train(self, features: str, labels, sparse_annotation, image=None, continue_training : bool = False):
         """
@@ -42,11 +47,9 @@ class ObjectClassifier():
 
         """
         self.classifier.feature_specification = features.replace(",", " ")
-        selected_features, gt = self._make_features(self.classifier.feature_specification , labels, sparse_annotation, image)
+        selected_features, gt = self._make_features(self.classifier.feature_specification, labels, sparse_annotation, image)
 
         self.classifier.train(selected_features, gt, continue_training=continue_training)
-        self.classifier.to_opencl_file(self.classifier.opencl_file, overwrite_classname=self.__class__.__name__)
-
 
     def predict(self, labels, image=None):
         """Predict object class from label image and optional intensity image.
@@ -64,18 +67,18 @@ class ObjectClassifier():
         import pyclesperanto_prototype as cle
         labels = cle.push(labels)
 
-        selected_features, gt = self._make_features(self.classifier.feature_specification, labels, None, image)
+        selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
+        output = self.classifier.predict(selected_features, return_numpy=False)
 
-
-        output = cle.create_like(selected_features[0].shape)
-        parameters = {}
-        for i, f in enumerate(selected_features):
-            parameters['in' + str(i)] = cle.push(f)
-
-        parameters['out'] = output
-
-        cle.execute(None, self.classifier.opencl_file, "predict", selected_features[0].shape, parameters)
-
+        # output = cle.create_like(selected_features[0].shape)
+        # parameters = {}
+        # for i, f in enumerate(selected_features):
+        #     parameters['in' + str(i)] = cle.push(f)
+        #
+        # parameters['out'] = output
+        #
+        # cle.execute(None, self.classifier.opencl_file, "predict", selected_features[0].shape, parameters)
+        #
         # set background to zero
         cle.set_column(output, 0, 0)
 
@@ -180,14 +183,14 @@ class ObjectClassifier():
 
         Returns
         -------
-        result:list[vector]
+        result:Dict[str, np.ndarray]
             list of vectors corresponding to the requested features. The vectors are shaped (n+1) for n labels. The
             first element corresponds to background.
         ground_truth: ndimage
             selected elements of provided ground truth where it's not 0
         """
         import pyclesperanto_prototype as cle
-        result = []
+        result = {}
         touch_matrix = None
         distance_matrix = None
         mask = None
@@ -214,9 +217,9 @@ class ObjectClassifier():
 
             if vector is not None:
                 if ground_truth is not None:
-                    result.append(np.asarray([vector[mask]]))
+                    result[key] = np.asarray([vector[mask]])
                 else:
-                    result.append(np.asarray([vector]))
+                    result[key] = np.asarray([vector])
                 # print(key, result[-1])
 
         if ground_truth is not None:
