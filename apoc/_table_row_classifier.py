@@ -8,7 +8,7 @@ from ._pixel_classifier import PixelClassifier
 class TableRowClassifier():
     def __init__(
             self,
-            opencl_filename="temp_object_classifier.cl",
+            opencl_filename="temp_table_row_classifier.cl",
             max_depth: int = 2, num_ensembles: int = 10,
             overwrite_classname: Optional[str] = None,
     ):
