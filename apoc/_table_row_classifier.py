@@ -5,7 +5,7 @@ import numpy as np
 from ._pixel_classifier import PixelClassifier
 
 
-class TableRowClassifier():
+class TableRowClassifier:
     def __init__(
             self,
             opencl_filename="temp_table_row_classifier.cl",
