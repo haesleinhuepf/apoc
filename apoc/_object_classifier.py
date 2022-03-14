@@ -181,9 +181,14 @@ class ObjectClassifier():
         Returns
         -------
         result:list[vector]
-            list of vectors corresponding to the requested features. The vectors are shaped (n) for n labels that
-            were annotated. Labels without annotation are removed from the vectors.
-            Background measurements are removed, because background cannot be classified.
+            list of vectors corresponding to the requested features.
+            If ground_truth is not None:
+                The vectors are shaped (n) for n labels that were annotated. Labels without annotation
+                are removed from the vectors. Background measurements are removed,
+                because background cannot be classified.
+            If ground_truth is None:
+                The vectors are shaped (n+1) for n labels.
+                That is, background + n measurements for n labels.
         ground_truth: ndimage
             selected elements of provided ground truth where it's not 0
         """
