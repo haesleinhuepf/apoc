@@ -174,9 +174,10 @@ class ObjectClassifier():
 
         Returns
         -------
-        result:Dict[str, np.ndarray]
-            list of vectors corresponding to the requested features. The vectors are shaped (n+1) for n labels. The
-            first element corresponds to background.
+        result:list[vector]
+            list of vectors corresponding to the requested features. The vectors are shaped (n) for n labels that
+            were annotated. Labels without annotation are removed from the vectors.
+            Background measurements are removed, because background cannot be classified.
         ground_truth: ndimage
             selected elements of provided ground truth where it's not 0
         """
