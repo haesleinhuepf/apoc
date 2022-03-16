@@ -1,4 +1,6 @@
 import numpy as np
+
+
 def test_object_classification():
     image      = np.asarray([[0,0,1,1,2,2,3,3,3,3,3]])
     labels     = np.asarray([[0,0,1,1,1,1,2,2,2,2,2]])
