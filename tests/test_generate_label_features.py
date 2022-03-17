@@ -45,7 +45,7 @@ def test_label_feature_generation_with_annotated_background():
     assert len(table) == 1
 
     # there are three area measurements
-    assert len(table[0][0]) == 3
+    assert len(table["area"][0]) == 3
 
 
 def test_label_feature_generation_for_prediction():
@@ -66,4 +66,4 @@ def test_label_feature_generation_for_prediction():
     assert len(table) == 1
 
     # there are four area measurements: background + 3 labels
-    assert len(table[0][0]) == 4
+    assert len(table["area"][0]) == 4
