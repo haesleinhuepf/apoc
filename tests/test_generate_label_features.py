@@ -20,7 +20,7 @@ def test_label_feature_generation():
     assert len(table) == 1
 
     # there are three area measurements
-    assert len(table[0][0]) == 3
+    assert len(np.squeeze(table["area"])) == 3
 
 
 def test_label_feature_generation_with_annotated_background():
