@@ -19,6 +19,8 @@ class ObjectClassifier():
         """
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
 
+        self._data = {}
+
         self.classifier = TableRowClassifier(
             opencl_filename=opencl_filename,
             max_depth=max_depth,
@@ -69,6 +71,7 @@ class ObjectClassifier():
 
         selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
         output = self.classifier.predict(selected_features, return_numpy=False)
+        self._data["APOC_ObjectClassifier_CLUSTER_ID"] = np.asarray(output)[0]
 
         # set background to zero
         cle.set_column(output, 0, 0)
@@ -188,6 +191,7 @@ class ObjectClassifier():
         """
         import pyclesperanto_prototype as cle
         result = {}
+        self._data = {}
         touch_matrix = None
         distance_matrix = None
         mask = None
@@ -217,11 +221,14 @@ class ObjectClassifier():
                     result[key] = np.asarray([vector[mask]])
                 else:
                     result[key] = np.asarray([vector])
+                self._data[key] = result[key][0]
                 # print(key, result[-1])
 
         if ground_truth is not None:
+            self._data['label'] = all_features['label'][mask]
             return result, ground_truth[mask]
         else:
+            self._data['label'] = all_features['label']
             return result, None
 
     def statistics(self):
