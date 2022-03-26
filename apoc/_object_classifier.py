@@ -71,8 +71,7 @@ class ObjectClassifier():
 
         selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
         output = self.classifier.predict(selected_features, return_numpy=False)
-        print(output.shape)
-        self._data["RFC_CLUSTER_ID"] = np.asarray(output)[0]
+        self._data["APOC_ObjectClassifier_CLUSTER_ID"] = np.asarray(output)[0]
 
         # set background to zero
         cle.set_column(output, 0, 0)
