@@ -38,6 +38,12 @@ class TableRowClassifier:
             overwrite_classname=self.classifier_classname
         )
 
+        # in case file existed, read feature specification from classifier
+        from os.path import exists
+        if exists(opencl_filename):
+            self.feature_specification = self.classifier.feature_specification
+            self._ordered_feature_names = self.feature_specification.replace(",", " ").split(" ")
+
     @property
     def ordered_feature_names(self) -> List[str]:
         """The feature names used in the order they are used by the classifier.
@@ -88,6 +94,7 @@ class TableRowClassifier:
         ordered_features = self._prepare_feature_table(feature_table)
         self.classifier.train(ordered_features, gt, continue_training=continue_training)
         self.classifier.to_opencl_file(self.classifier.opencl_file, overwrite_classname=self.classifier_classname)
+        self.feature_specification = self.classifier.feature_specification
 
     def predict(
             self,
@@ -155,11 +162,8 @@ class TableRowClassifier:
             The features stored in a list. The order of the features is
             specified by self.ordered_feature_names
         """
-        if len(self._ordered_feature_names) == 0:
-            # if the feature names haven't previously been stored,
-            # store them as a list
-            self._ordered_feature_names = list(feature_table.keys())
-            self.classifier.feature_specification = " ".join(self.ordered_feature_names)
+        self._ordered_feature_names = list(feature_table.keys())
+        self.classifier.feature_specification = " ".join(self.ordered_feature_names)
         return self.order_feature_table(feature_table)
 
     def order_feature_table(self, feature_table: Dict[str, np.ndarray]) -> List[np.ndarray]:
