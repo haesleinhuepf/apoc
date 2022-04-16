@@ -125,7 +125,11 @@ class TableRowClassifier:
         ordered_features = self.order_feature_table(feature_table)
 
         # allocate the result
-        output = cle.create_like(ordered_features[0].shape)
+        if len(ordered_features[0].shape) > 1:
+            output = cle.create_like(ordered_features[0].shape)
+        else:
+            # make sure it's at least 2D
+            output = cle.create((1, len(ordered_features[0])))
 
         # push the features
         parameters = {}
