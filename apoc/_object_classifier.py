@@ -49,8 +49,13 @@ class ObjectClassifier():
 
         """
         self.classifier.feature_specification = features.replace(",", " ")
-        selected_features, gt = self._make_features(self.classifier.feature_specification, labels, sparse_annotation, image)
 
+        # remove too many spaces
+        while "  " in self.classifier.feature_specification:
+            self.classifier.feature_specification = self.classifier.feature_specification.replace("  ", " ")
+        self.classifier.feature_specification = self.classifier.feature_specification.strip()
+
+        selected_features, gt = self._make_features(self.classifier.feature_specification, labels, sparse_annotation, image)
         self.classifier.train(selected_features, gt, continue_training=continue_training)
 
     def predict(self, labels, image=None):

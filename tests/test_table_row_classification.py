@@ -29,3 +29,10 @@ def test_table_row_classification(tmpdir, feature_table):
 
     assert result.dtype == np.uint32
     assert np.allclose(ground_truth, result)
+
+    # rerun classifier from file
+    oc = apoc.TableRowClassifier(opencl_file)
+    result = oc.predict(feature_table, return_numpy=True)
+
+    assert result.dtype == np.uint32
+    assert np.allclose(ground_truth, result)
