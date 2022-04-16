@@ -142,10 +142,10 @@ class TableRowClassifier:
 
         # determine rows which contained NaN values
         table = pd.DataFrame(ordered_features)
-        was_nan = cle.asarray([1 - np.max(table.isnull().values, axis=0) * 1])
+        was_not_nan = cle.asarray([1 - np.max(table.isnull().values, axis=0) * 1])
 
         # mask output: if there was NaN before, classification becomes 0
-        output = was_nan * output
+        output = was_not_nan * output
 
         if return_numpy is True:
             return np.asarray(output[0], dtype=np.uint32)
