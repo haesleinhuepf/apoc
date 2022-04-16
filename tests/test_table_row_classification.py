@@ -22,7 +22,7 @@ def test_table_row_classification(tmpdir, feature_table):
     oc = apoc.TableRowClassifier(opencl_file)
     oc.train(
         feature_table=feature_table,
-        gt=ground_truth,
+        ground_truth=ground_truth,
         continue_training=False
     )
     result = oc.predict(feature_table, return_numpy=True)

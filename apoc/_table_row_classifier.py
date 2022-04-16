@@ -73,7 +73,7 @@ class TableRowClassifier:
     def train(
         self,
         feature_table: Dict[str, Union[List[float], np.ndarray]],
-        gt: np.ndarray,
+        ground_truth: np.ndarray,
         continue_training: bool = False
     ):
         """Train a classifier that can differentiate classes from rows of pre-calculated features.
@@ -84,7 +84,7 @@ class TableRowClassifier:
             The table from which to make the prediction. Each row of the table
             will be classified. The table can either be a pandas DataFrame or a
             Dict with string keys (column names) and numpy array columns.
-        gt : np.array
+        ground_truth : np.array
             The array containing the ground truth class for each row in feature_table
         continue_training : bool
             Flag set to true if training is to be continued from an existing classifier.
@@ -92,7 +92,7 @@ class TableRowClassifier:
 
         """
         ordered_features = self._prepare_feature_table(feature_table)
-        self.classifier.train(ordered_features, gt, continue_training=continue_training)
+        self.classifier.train(ordered_features, ground_truth, continue_training=continue_training)
         self.classifier.to_opencl_file(self.classifier.opencl_file, overwrite_classname=self.classifier_classname)
         self.feature_specification = self.classifier.feature_specification
 
