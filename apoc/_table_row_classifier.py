@@ -1,6 +1,7 @@
 from typing import Dict, List, Union, Optional
 
 import numpy as np
+import pandas as pd
 
 from ._pixel_classifier import PixelClassifier
 
@@ -91,7 +92,7 @@ class TableRowClassifier:
             The default value is False.
 
         """
-        ordered_features = self._prepare_feature_table(feature_table)
+        ordered_features, ground_truth = self._prepare_feature_table(feature_table, ground_truth)
         self.classifier.train(ordered_features, ground_truth, continue_training=continue_training)
         self.classifier.to_opencl_file(self.classifier.opencl_file, overwrite_classname=self.classifier_classname)
         self.feature_specification = self.classifier.feature_specification
@@ -135,14 +136,22 @@ class TableRowClassifier:
         # run the classifier
         cle.execute(None, self.classifier.opencl_file, "predict", ordered_features[0].shape, parameters)
 
+        # determine rows which contained NaN values
+        table = pd.DataFrame(ordered_features)
+        was_nan = cle.asarray([1 - np.max(table.isnull().values, axis=0) * 1])
+
+        # mask output: if there was NaN before, classification becomes 0
+        output = was_nan * output
+
         if return_numpy is True:
-            return np.asarray(output, dtype=np.uint32)
+            return np.asarray(output[0], dtype=np.uint32)
         else:
-            return output
+            return output[0]
 
     def _prepare_feature_table(
             self,
-            feature_table: Dict[str, Union[List[float], np.ndarray]]
+            feature_table: Dict[str, Union[List[float], np.ndarray]],
+            ground_truth : np.ndarray
     ) -> List[np.ndarray]:
         """Prepare a feature table for training.
 
@@ -155,6 +164,8 @@ class TableRowClassifier:
             The table from which to make the prediction. Each row of the table
             will be classified. The table can either be a pandas DataFrame or a
             Dict with string keys (column names) and numpy array columns.
+        ground_truth : np.array
+            The array containing the ground truth class for each row in feature_table
 
         Returns
         -------
@@ -162,9 +173,30 @@ class TableRowClassifier:
             The features stored in a list. The order of the features is
             specified by self.ordered_feature_names
         """
+        # make sure it's a DataFrame and we can modify it
+        feature_table = pd.DataFrame(feature_table).copy()
+
+        # store original keys
+        original_keys = feature_table.keys().copy()
+
+        # add ground_truth to table so that we can filter it with the othert columns
+        if "ground_truth" in feature_table.keys():
+            raise ValueError("feature_table must not contain column named 'ground_truth'")
+        feature_table.insert(len(feature_table.keys()), 'ground_truth', ground_truth)
+
+        # drop rows with NaN values
+        feature_table = feature_table.dropna(how="any")
+
+        # drop rows with ground_truth == 0
+        feature_table = feature_table[feature_table['ground_truth'] > 0]
+
+        # get ground_truth back and a table with the original columns
+        updated_ground_truth = np.asarray(feature_table['ground_truth'])
+        feature_table = feature_table[original_keys]
+
         self._ordered_feature_names = list(feature_table.keys())
         self.classifier.feature_specification = " ".join(self.ordered_feature_names)
-        return self.order_feature_table(feature_table)
+        return self.order_feature_table(feature_table), updated_ground_truth
 
     def order_feature_table(self, feature_table: Dict[str, np.ndarray]) -> List[np.ndarray]:
         """Coerce a feature table into the format required by the classifier.
