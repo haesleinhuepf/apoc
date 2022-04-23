@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import apoc
+
 feature_table_dict = {
     "area": np.array([10, 10, 30, 30, 10]),
     "surface_area": np.array([5.0, 3, 80, 80, 9])
@@ -83,3 +85,18 @@ def test_with_nans_and_missing_annotations(tmpdir, feature_table):
     print(result)
 
     np.allclose(result, reference)
+
+
+def test_raises_error_when_ground_truth_provided_in_table():
+    classifier = apoc.TableRowClassifier()
+
+    ground_truth = np.asarray([2,1,2])
+    table = {
+        "area":[1,2,3],
+        "ground_truth":ground_truth
+    }
+
+    with pytest.raises(ValueError):
+        classifier.train(table, ground_truth)
+
+
