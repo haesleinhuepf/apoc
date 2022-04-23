@@ -76,6 +76,8 @@ class ObjectClassifier():
 
         selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
         output = self.classifier.predict(selected_features, return_numpy=False)
+        if len(output.shape) == 1: # backwards compatibility: make sure it's 2D
+            output = cle.push([output])
         self._data["APOC_ObjectClassifier_CLUSTER_ID"] = np.asarray(output)[0]
 
         # set background to zero
@@ -223,11 +225,10 @@ class ObjectClassifier():
 
             if vector is not None:
                 if ground_truth is not None:
-                    result[key] = np.asarray([vector[mask]])
+                    result[key] = np.asarray([vector[mask]])[0]
                 else:
-                    result[key] = np.asarray([vector])
-                self._data[key] = result[key][0]
-                # print(key, result[-1])
+                    result[key] = np.asarray([vector])[0]
+                self._data[key] = result[key]
 
         if ground_truth is not None:
             self._data['label'] = all_features['label'][mask]
