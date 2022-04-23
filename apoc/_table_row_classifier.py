@@ -186,7 +186,7 @@ class TableRowClassifier:
         # add ground_truth to table so that we can filter it with the other columns
         if "ground_truth" in feature_table.keys():
             raise ValueError("feature_table must not contain column named 'ground_truth'")
-        feature_table.insert(len(feature_table.keys()), 'ground_truth', ground_truth)
+        feature_table['ground_truth'] = ground_truth
 
         # drop rows with NaN values
         feature_table = feature_table.dropna(how="any")
