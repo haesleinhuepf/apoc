@@ -46,3 +46,5 @@ class PredefinedFeatureSet(Enum):
     object_size_20_to_25_px = _make_feature_definition(["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur"], range(20, 26))
     object_size_25_to_50_px = _make_feature_definition(["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur"], range(25, 50, 5))
     object_size_50_to_100_px = _make_feature_definition(["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur"], range(50, 100, 10))
+
+    v070 = _make_feature_definition(["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur", "sobel_of_gaussian_blur"], [1])
