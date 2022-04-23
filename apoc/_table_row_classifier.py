@@ -192,7 +192,7 @@ class TableRowClassifier:
         feature_table = feature_table.dropna(how="any")
 
         # drop rows with ground_truth == 0
-        feature_table = feature_table[feature_table['ground_truth'] > 0]
+        feature_table = feature_table.loc[feature_table['ground_truth'] > 0]
 
         # get ground_truth back and a table with the original columns
         updated_ground_truth = np.asarray(feature_table['ground_truth'])
