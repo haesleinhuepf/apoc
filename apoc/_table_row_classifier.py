@@ -162,6 +162,8 @@ class TableRowClassifier:
         This coerces the feature table into the form expected by the classifier
         (list of numpy array) and stores the order of the features.
 
+        Table entries where any column == NaN or ground_truth = 0 are dropped.
+
         Parameters
         ----------
         feature_table : Dict[str, Union[List[float], np.ndarray]]
@@ -176,6 +178,9 @@ class TableRowClassifier:
         ordered_features : List[np.ndarray]
             The features stored in a list. The order of the features is
             specified by self.ordered_feature_names
+        updated_ground_truth : List[int]
+            new list of ground_truth without the entries where ground_truth==0 or any
+            column was NaN
         """
         # make sure it's a DataFrame and we can modify it
         feature_table = pd.DataFrame(feature_table).copy()
