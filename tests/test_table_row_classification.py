@@ -100,3 +100,32 @@ def test_raises_error_when_ground_truth_provided_in_table():
         classifier.train(table, ground_truth)
 
 
+def test_drop_nans():
+    classifier = apoc.TableRowClassifier()
+
+    ground_truth = np.asarray([2,1,2,2])
+    table = {
+        "area":[1,2,3, np.nan]
+    }
+
+    result, new_ground_truth = classifier._prepare_feature_table(table, ground_truth)
+    print(result)
+    print(new_ground_truth)
+
+    assert len(result[0]) == 3
+    assert len(new_ground_truth) == 3
+
+def test_drop_nans_and_ground_truth_0():
+    classifier = apoc.TableRowClassifier()
+
+    ground_truth = np.asarray([0,1,2,2])
+    table = {
+        "area":[1,2,3, np.nan]
+    }
+
+    result, new_ground_truth = classifier._prepare_feature_table(table, ground_truth)
+    print(result)
+    print(new_ground_truth)
+
+    assert len(result[0]) == 2
+    assert len(new_ground_truth) == 2
