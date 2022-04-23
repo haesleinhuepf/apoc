@@ -27,14 +27,14 @@ def test_table_row_classification(tmpdir, feature_table):
         ground_truth=ground_truth,
         continue_training=False
     )
-    result = oc.predict(feature_table, return_numpy=True)
+    result = oc.predict(feature_table)
 
     assert result.dtype == np.uint32
     assert np.allclose(ground_truth, result)
 
     # rerun classifier from file
     oc = apoc.TableRowClassifier(opencl_file)
-    result = oc.predict(feature_table, return_numpy=True)
+    result = oc.predict(feature_table)
 
     assert result.dtype == np.uint32
     assert np.allclose(ground_truth, result)
@@ -57,7 +57,7 @@ def test_with_nans(tmpdir, feature_table):
         ground_truth=annotation,
         continue_training=False
     )
-    result = oc.predict(feature_table, return_numpy=True)
+    result = oc.predict(feature_table)
 
     np.allclose(result, reference)
 
@@ -79,7 +79,7 @@ def test_with_nans_and_missing_annotations(tmpdir, feature_table):
         ground_truth=annotation,
         continue_training=False
     )
-    result = oc.predict(feature_table, return_numpy=True)
+    result = oc.predict(feature_table)
 
     print(reference)
     print(result)

@@ -99,8 +99,7 @@ class TableRowClassifier:
 
     def predict(
             self,
-            feature_table: Dict[str, Union[List[float], np.ndarray]],
-            return_numpy: bool = True
+            feature_table: Dict[str, Union[List[float], np.ndarray]]
     ) -> np.array:
         """Predict row class from a table.
 
@@ -110,10 +109,6 @@ class TableRowClassifier:
             The table from which to make the prediction. Each row of the table
             will be classified. The table can either be a pandas DataFrame or a
             Dict with string keys (column names) and numpy array columns.
-        return_numpy : bool
-            If True, the resulting predictions are returned as a numpy array.
-            If False, the predictions are returned as a pyopencl array.
-            The default value is True.
 
         Returns
         -------
@@ -147,10 +142,7 @@ class TableRowClassifier:
         # mask output: if there was NaN before, classification becomes 0
         output = was_not_nan * output
 
-        if return_numpy is True:
-            return np.asarray(output[0], dtype=np.uint32)
-        else:
-            return output[0]
+        return np.asarray(output[0]).astype(np.uint32)
 
     def _prepare_feature_table(
             self,

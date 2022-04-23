@@ -75,7 +75,7 @@ class ObjectClassifier():
         labels = cle.push(labels)
 
         selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
-        output = self.classifier.predict(selected_features, return_numpy=False)
+        output = self.classifier.predict(selected_features)
         if len(output.shape) == 1: # backwards compatibility: make sure it's 2D
             output = cle.push([output])
         self._data["APOC_ObjectClassifier_CLUSTER_ID"] = np.asarray(output)[0]
