@@ -33,6 +33,8 @@ class PixelClassifier():
         self.opencl_file = opencl_filename
         self.classifier = None
 
+        self._dimensions = None
+
         classname_to_check = self.__class__.__name__
         if overwrite_classname is not None:
             classname_to_check = overwrite_classname
@@ -82,6 +84,9 @@ class PixelClassifier():
         self._X = X
         self._y = y
 
+        # memorize image shape
+        self._dimensions = image.shape
+
         # save as OpenCL
         self.to_opencl_file(self.opencl_file)
 
@@ -102,6 +107,9 @@ class PixelClassifier():
         """
         if features is None:
             features = self.feature_specification
+
+        if self._dimensions[0] != image.shape[0]:
+            raise ValueError(f'Expected first dimension of input image to be {self._dimensions[0]}, got {image.shape[0]}')
 
         features = self._make_features_potentially_multichannel(features, image)
 
