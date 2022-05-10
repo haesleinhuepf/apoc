@@ -118,7 +118,7 @@ class PixelClassifier():
         if features is None:
             features = self.feature_specification
 
-        if len(self._dimensions) != len(np.asarray(image).shape):
+        if len(self._dimensions) != len(np.asarray(image).squeeze().shape):
             raise ValueError(f'Expected number of dimensions of input image to be {len(self._dimensions)}, got {len(image.shape)}')
 
         features = self._make_features_potentially_multichannel(features, image)
