@@ -3,6 +3,7 @@ from skimage.io import imshow, imsave, imread
 import numpy as np
 import apoc
 from pathlib import Path
+import sys
 
 def test_multichannel_training_and_prediction():
     image = cells3d()
@@ -38,3 +39,8 @@ def test_multichannel_training_and_prediction():
 
     assert np.allclose(result, ref_image)
 
+    try:
+        result = clf.predict(image=[image_ch2])
+    except Exception:
+        exc = sys.exc_info()
+        assert isinstance(exc[1], AttributeError)
