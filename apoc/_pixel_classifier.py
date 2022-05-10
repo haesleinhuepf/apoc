@@ -45,6 +45,11 @@ class PixelClassifier():
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
 
+    def info(self) -> None:
+        """Print general information about this classifier."""
+        print(f'Used features for training: {self.feature_specification}')
+        print(f'Training data dimensions: {self._dimensions}')
+
     def train(self, features, ground_truth, image=None, continue_training : bool = False):
         """
         Train a scikit-learn RandomForestClassifier and save it as OpenCL file to disk which
