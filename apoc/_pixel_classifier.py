@@ -90,7 +90,7 @@ class PixelClassifier():
         self._y = y
 
         # memorize image shape
-        self._dimensions = image.shape
+        self._dimensions = None if image is None else np.asarray(image).shape
 
         # save as OpenCL
         self.to_opencl_file(self.opencl_file)
@@ -113,8 +113,8 @@ class PixelClassifier():
         if features is None:
             features = self.feature_specification
 
-        if self._dimensions[0] != image.shape[0]:
-            raise ValueError(f'Expected first dimension of input image to be {self._dimensions[0]}, got {image.shape[0]}')
+        if len(self._dimensions) != len(np.asarray(image).shape):
+            raise ValueError(f'Expected number of dimensions of input image to be {len(self._dimensions)}, got {len(image.shape)}')
 
         features = self._make_features_potentially_multichannel(features, image)
 
