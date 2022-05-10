@@ -196,6 +196,7 @@ class PixelClassifier():
         file1.write("num_features = " + str(self.num_features) + "\n")
         file1.write("max_depth = " + str(self.max_depth) + "\n")
         file1.write("num_trees = " + str(self.num_ensembles) + "\n")
+        file1.write("dimensions = " + str(self._dimensions) + "\n")
         if extra_information is not None:
             file1.write(extra_information)
         from apoc import __version__ as version
