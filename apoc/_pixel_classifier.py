@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from ._converter import RFC_to_OCL
 from ._utils import generate_feature_stack, _read_something_from_opencl_file
+import re
 
 
 class PixelClassifier():
@@ -25,6 +26,7 @@ class PixelClassifier():
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
         self.NUM_GROUND_TRUTH_DIMENSIONS_KEY = "num_ground_truth_dimensions = "
         self.CLASSIFIER_CLASS_NAME_KEY = "classifier_class_name = "
+        self.DIMENSIONS_KEY = "dimensions = "
 
         self.max_depth = max_depth
         self.num_ensembles = num_ensembles
@@ -44,6 +46,9 @@ class PixelClassifier():
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
+        self._dimensions = _read_something_from_opencl_file(opencl_filename, self.DIMENSIONS_KEY, None)
+        if self._dimensions is not None:
+            self._dimensions = list(map(int, re.findall(r'\d+', self._dimensions)))
 
     def info(self) -> None:
         """Print general information about this classifier."""
