@@ -72,7 +72,7 @@ jobs:
         shell: bash -l {0}
         run: |
           python --version
-          conda install -y pyopencl=2022.1.3
+          conda install -y pyopencl
           python -m pip install --upgrade pip
           # pip install setuptools tox tox-gh-actions
           pip install setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt5 pytest-xvfb pandas
@@ -87,7 +87,9 @@ jobs:
       #    PLATFORM: ${{ matrix.platform }}
       - name: Test
         shell: bash -l {0}
-        run: pytest -v --cov=./ --cov-report=xml
+        run: |
+          export LD_DEBUG=libs
+          pytest -v --cov=./ --cov-report=xml
 
       - name: Coverage
         uses: codecov/codecov-action@v1
