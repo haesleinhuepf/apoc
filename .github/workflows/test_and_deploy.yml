@@ -72,10 +72,8 @@ jobs:
         shell: bash -l {0}
         run: |
           python --version
-          conda install -y pyopencl
-          python -m pip install --upgrade pip
+          conda install -y pyopencl pip setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt pytest-xvfb pandas
           # pip install setuptools tox tox-gh-actions
-          pip install setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt5 pytest-xvfb pandas
 
           pip install -e .
       # this runs the platform-specific tests declared in tox.ini
