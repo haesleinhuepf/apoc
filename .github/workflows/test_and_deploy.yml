@@ -86,7 +86,6 @@ jobs:
       - name: Test
         shell: bash -l {0}
         run: |
-          export LD_DEBUG=libs
           pytest -v --cov=./ --cov-report=xml
 
       - name: Coverage
