@@ -16,7 +16,7 @@ def test_training_and_prediction():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.PixelClassifier()
+    classifier = apoc.PixelClassifier(num_ensembles=10)
     classifier.train(feature_specs, gt_image, image)
 
     result = classifier.predict(image=image)
@@ -38,7 +38,7 @@ def test_multichannel_training_and_prediction():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.PixelClassifier()
+    classifier = apoc.PixelClassifier(num_ensembles=10)
     classifier.train(feature_specs, gt_image, [image, image])
 
     result = classifier.predict(image=[image, image])
@@ -61,7 +61,7 @@ def test_continue_training_and_prediction():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.PixelClassifier()
+    classifier = apoc.PixelClassifier(num_ensembles=10)
     classifier.train(feature_specs, gt_image, image, continue_training=True)
     classifier.train(feature_specs, gt_image, image, continue_training=True)
 

@@ -17,7 +17,7 @@ def test_object_classification():
             """.replace("\n", " ")
     
     import apoc
-    oc = apoc.ObjectClassifier()
+    oc = apoc.ObjectClassifier(num_ensembles=10)
     oc.train(feature_definition, labels, annotation, image)
     result = oc.predict(labels, image)
 

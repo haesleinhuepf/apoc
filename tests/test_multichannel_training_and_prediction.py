@@ -25,7 +25,7 @@ def test_multichannel_training_and_prediction():
     # this is where the model will be saved
     cl_filename = 'test_pixel_classifier_multichannel.cl'
 
-    clf = PixelClassifier(opencl_filename=cl_filename)
+    clf = PixelClassifier(opencl_filename=cl_filename, num_ensembles=10)
     clf.train(features=features, ground_truth=annotation, image=[image_ch1, image_ch2])
 
     result = clf.predict(image=[image_ch1, image_ch2])
