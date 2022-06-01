@@ -6,7 +6,7 @@ from ._utils import generate_feature_stack, _read_something_from_opencl_file
 
 
 class PixelClassifier():
-    def __init__(self, opencl_filename = "temp_pixel_classifier.cl", max_depth: int = 2, num_ensembles: int = 10, overwrite_classname:str = None):
+    def __init__(self, opencl_filename = "temp_pixel_classifier.cl", max_depth: int = 2, num_ensembles: int = 100, overwrite_classname:str = None):
         """
         A RandomForestClassifier that converts itself to OpenCL after training.
 
