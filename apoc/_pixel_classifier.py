@@ -97,9 +97,6 @@ class PixelClassifier():
         self._X = X
         self._y = y
 
-        # memorize image shape
-        self._dimensions = None if image is None else np.asarray(image).shape
-
         # save as OpenCL
         self.to_opencl_file(self.opencl_file)
 
@@ -121,8 +118,9 @@ class PixelClassifier():
         if features is None:
             features = self.feature_specification
 
-        if len(self._dimensions) != len(np.asarray(image).squeeze().shape):
-            raise ValueError(f'Expected number of dimensions of input image to be {len(self._dimensions)}, got {len(image.shape)}')
+        _dimensions = 1 if len(image.squeeze().shape) == 2 else image.squeeze().shape[0]
+        if self.num_ground_truth_dimensions != _dimensions:
+            raise ValueError(f'Expected number of dimensions of input image to be {self.num_ground_truth_dimensions}, got {_dimensions}')
 
         features = self._make_features_potentially_multichannel(features, image)
 
@@ -204,7 +202,6 @@ class PixelClassifier():
         file1.write("num_features = " + str(self.num_features) + "\n")
         file1.write("max_depth = " + str(self.max_depth) + "\n")
         file1.write("num_trees = " + str(self.num_ensembles) + "\n")
-        file1.write("dimensions = " + str(self._dimensions) + "\n")
         if extra_information is not None:
             file1.write(extra_information)
         from apoc import __version__ as version
