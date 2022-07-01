@@ -16,7 +16,7 @@ def test_object_segmentation():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.ObjectSegmenter(positive_class_identifier=2)
+    classifier = apoc.ObjectSegmenter(positive_class_identifier=2, num_ensembles=10)
     classifier.train(feature_specs, gt_image, image)
 
     result = classifier.predict(image=image)

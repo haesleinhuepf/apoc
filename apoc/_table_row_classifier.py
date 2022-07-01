@@ -10,7 +10,7 @@ class TableRowClassifier:
     def __init__(
             self,
             opencl_filename="temp_table_row_classifier.cl",
-            max_depth: int = 2, num_ensembles: int = 10,
+            max_depth: int = 2, num_ensembles: int = 100,
             overwrite_classname: Optional[str] = None,
     ):
         """A RandomForestClassifier for classifying rows of a table that converts itself to OpenCL after training.

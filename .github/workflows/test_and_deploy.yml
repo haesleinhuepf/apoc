@@ -47,7 +47,7 @@ jobs:
       - name: Install Windows OpenGL
         if: runner.os == 'Windows'
         run: |
-          git clone --depth 1 git://github.com/pyvista/gl-ci-helpers.git
+          git clone --depth 1 https://github.com/pyvista/gl-ci-helpers.git
           powershell gl-ci-helpers/appveyor/install_opengl.ps1
 
       # note: if you need dependencies from conda, considering using
@@ -72,10 +72,8 @@ jobs:
         shell: bash -l {0}
         run: |
           python --version
-          conda install -y pyopencl
-          python -m pip install --upgrade pip
+          conda install -y pyopencl pip setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt pytest-xvfb pandas
           # pip install setuptools tox tox-gh-actions
-          pip install setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt5 pytest-xvfb pandas
 
           pip install -e .
       # this runs the platform-specific tests declared in tox.ini
@@ -87,7 +85,8 @@ jobs:
       #    PLATFORM: ${{ matrix.platform }}
       - name: Test
         shell: bash -l {0}
-        run: pytest -v --cov=./ --cov-report=xml
+        run: |
+          pytest -v --cov=./ --cov-report=xml
 
       - name: Coverage
         uses: codecov/codecov-action@v1

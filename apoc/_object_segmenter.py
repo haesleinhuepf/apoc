@@ -4,7 +4,7 @@ from ._utils import _read_something_from_opencl_file
 class ObjectSegmenter(PixelClassifier):
 
     
-    def __init__(self, opencl_filename = "temp_object_segmenter.cl", max_depth: int = 2, num_ensembles: int = 10, positive_class_identifier : int = 2):
+    def __init__(self, opencl_filename = "temp_object_segmenter.cl", max_depth: int = 2, num_ensembles: int = 100, positive_class_identifier : int = 2):
         """
         A Random Forest Classifier that classifies pixels and afterwards selects a single class and applies connected
         component labeling to all pixels of that class.
