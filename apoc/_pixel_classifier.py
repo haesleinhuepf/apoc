@@ -46,8 +46,17 @@ class PixelClassifier():
 
     def info(self) -> None:
         """Print general information about this classifier."""
+
+        print(f'Classifier type: {self.__class__.__name__}')
+
+        num_classes = _read_something_from_opencl_file(self.opencl_file, 'num_classes =', '')
+
+        print('--- Random forest info ---')
         print(f'Used features for training: {self.feature_specification}')
-        print(f'Training data dimensions: {self.num_ground_truth_dimensions}')
+        print(f'Training data dimensions: [{self.num_ground_truth_dimensions} x X x Y]')
+        print(f'Maximum depth: {self.max_depth}')
+        print(f'Number of ensembles: {self.num_ensembles}')
+        print(f'Number of classes: {num_classes}')
 
     def train(self, features, ground_truth, image=None, continue_training : bool = False):
         """
