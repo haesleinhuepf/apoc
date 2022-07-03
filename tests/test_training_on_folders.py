@@ -35,3 +35,6 @@ def test_training_on_folders():
 
         # There are at least 4 objects in each image
         assert(labels.max() > 3)
+
+if __name__ == '__main__':
+    test_training_on_folders()

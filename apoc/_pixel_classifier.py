@@ -118,9 +118,9 @@ class PixelClassifier():
         if features is None:
             features = self.feature_specification
 
-        _dimensions = 1 if len(image.squeeze().shape) == 2 else image.squeeze().shape[0]
-        if self.num_ground_truth_dimensions != _dimensions:
-            raise ValueError(f'Expected number of dimensions of input image to be {self.num_ground_truth_dimensions}, got {_dimensions}')
+        # if isinstance(image, np.ndarray):
+        #     if self.num_ground_truth_dimensions != _dimensions:
+        #
 
         features = self._make_features_potentially_multichannel(features, image)
 

@@ -39,8 +39,7 @@ def test_multichannel_training_and_prediction():
 
     assert np.allclose(result, ref_image)
 
-    try:
-        result = clf.predict(image=[image_ch2])
-    except Exception:
-        exc = sys.exc_info()
-        assert isinstance(exc[1], AttributeError)
+    clf.info()
+
+if __name__ == '__main__':
+    test_multichannel_training_and_prediction()
