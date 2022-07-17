@@ -23,7 +23,6 @@ With a given blobs image and a corresponding annotation...
 ```python
 from skimage.io import imread, imshow
 import pyclesperanto_prototype as cle
-import numpy as np
 import apoc
 
 image = imread('blobs.tif')
