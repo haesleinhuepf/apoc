@@ -23,6 +23,7 @@ class PixelClassifier():
             https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
         """
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
+        self.FEATURE_IMPORTANCES_SPECIFICATION_KEY = "feature_importances = "
         self.NUM_GROUND_TRUTH_DIMENSIONS_KEY = "num_ground_truth_dimensions = "
         self.CLASSIFIER_CLASS_NAME_KEY = "classifier_class_name = "
 
@@ -42,6 +43,11 @@ class PixelClassifier():
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
+        all_feature_importances = _read_something_from_opencl_file(opencl_filename, self.FEATURE_IMPORTANCES_SPECIFICATION_KEY, "")
+        if len(all_feature_importances) > 0:
+            self._feature_importances = [float(f) for f in all_feature_importances.split(",")]
+        else:
+            self._feature_importances = []
 
     def train(self, features, ground_truth, image=None, continue_training : bool = False):
         """
@@ -78,6 +84,7 @@ class PixelClassifier():
 
         self.classifier = RandomForestClassifier(max_depth=self.max_depth, n_estimators=self.num_ensembles, random_state=0)
         self.classifier.fit(X, y)
+        self._feature_importances = self.classifier.feature_importances_
 
         self._X = X
         self._y = y
@@ -183,6 +190,7 @@ class PixelClassifier():
         file1.write("num_features = " + str(self.num_features) + "\n")
         file1.write("max_depth = " + str(self.max_depth) + "\n")
         file1.write("num_trees = " + str(self.num_ensembles) + "\n")
+        file1.write(self.FEATURE_IMPORTANCES_SPECIFICATION_KEY + ",".join([str(fi) for fi in self._feature_importances]) + "\n")
         if extra_information is not None:
             file1.write(extra_information)
         from apoc import __version__ as version
@@ -269,6 +277,29 @@ class PixelClassifier():
             features = generate_feature_stack(image, features)
 
         return features
+
+    def feature_importances(self):
+        """Provide feature importances about the trained Random Forest Classifier
+
+        The values are provided as dictionary {feature_name:portion_importance}.
+
+        See also
+        --------
+        ..[0] https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+        """
+        opencl_filename = self.opencl_file
+
+        feature_specification = _read_something_from_opencl_file(opencl_filename, "feature_specification =", "") \
+            .replace(",", " ") \
+            .replace("  ", " ") \
+            .strip() \
+            .split(" ")
+
+        result = {}
+        for i, feature in enumerate(feature_specification):
+            result[feature] = self._feature_importances[i]
+
+        return result
 
     def statistics(self):
         """Provide statistics about the trained Random Forest Classifier

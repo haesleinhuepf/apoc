@@ -25,6 +25,14 @@ def test_training_and_prediction():
 
     assert np.allclose(result, ref_image)
 
+    feature_importances = classifier.feature_importances()
+    print(feature_importances)
+
+    assert feature_importances["original"] > 0.3
+    assert feature_importances["gaussian_blur=1"] > 0.3
+    assert feature_importances["sobel_of_gaussian_blur=1"] < 0.1
+
+
 def test_multichannel_training_and_prediction():
     root = Path(apoc.__file__).parent
     img_path = str(root / '..' / 'demo' / 'blobs.tif')
