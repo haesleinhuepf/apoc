@@ -38,3 +38,5 @@ def test_multichannel_training_and_prediction():
 
     assert np.allclose(result, ref_image)
 
+    clf.info()
+    print(clf)
