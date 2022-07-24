@@ -19,6 +19,9 @@ def test_training_and_prediction():
     classifier = apoc.PixelClassifier(num_ensembles=10)
     classifier.train(feature_specs, gt_image, image)
 
+    print(classifier)
+    assert "Ground truth dimensions: 2" in str(classifier)
+
     result = classifier.predict(image=image)
 
     assert result.dtype == np.uint32

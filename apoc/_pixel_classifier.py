@@ -52,7 +52,7 @@ class PixelClassifier():
         info = '\n'.join([f'Classifier type: {self.classname}',
                           '--- Random forest info ---',
                           f'Used features for training: {self.feature_specification}',
-                          f'Training data dimensions: [{self.num_ground_truth_dimensions} x X x Y]',
+                          f'Ground truth dimensions: {self.num_ground_truth_dimensions}',
                           f'Maximum depth: {self.max_depth}',
                           f'Number of ensembles: {self.num_ensembles}',
                           f'Number of classes: {num_classes}'])
