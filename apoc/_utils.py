@@ -137,6 +137,8 @@ def _read_something_from_opencl_file(opencl_filename, some_key:str, default_valu
             if line.startswith(some_key):
                 return line.replace(some_key, "").replace("\n","")
 
+    return default_value
+
 def erase_classifier(filename):
     """Deletes a file in case it exists.
 
