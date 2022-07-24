@@ -20,11 +20,13 @@ def test_object_segmentation():
 
     print(classifier)
     assert 'ObjectSegmenter' in str(classifier)
+    assert 'Positive class identifier' in str(classifier)
 
     classifier.train(feature_specs, gt_image, image)
 
     print(classifier)
     assert 'ObjectSegmenter' in str(classifier)
+    assert 'Positive class identifier' in str(classifier)
 
     result = classifier.predict(image=image)
 

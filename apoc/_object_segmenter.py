@@ -65,4 +65,8 @@ class ObjectSegmenter(PixelClassifier):
         
         return cle.connected_components_labeling_diamond(binary)
 
+    def __str__(self):
+        info = super(ObjectSegmenter, self).__str__() + \
+                '\n'.join([f'Positive class identifier: {self.positive_class_identifier}'])
+        return info
 
