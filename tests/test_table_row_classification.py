@@ -39,6 +39,10 @@ def test_table_row_classification(tmpdir, feature_table):
     assert result.dtype == np.uint32
     assert np.allclose(ground_truth, result)
 
+    info = oc.info()
+    assert 'TableRowClassifier' in info
+    print(oc)
+
 @pytest.mark.parametrize("feature_table", [feature_table_dict, feature_table_data_frame])
 def test_with_nans(tmpdir, feature_table):
 

@@ -38,5 +38,6 @@ def test_multichannel_training_and_prediction():
 
     assert np.allclose(result, ref_image)
 
-    clf.info()
+    info = clf.info()
+    assert 'PixelClassifier' in info
     print(clf)

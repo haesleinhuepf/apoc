@@ -24,3 +24,6 @@ def test_object_segmentation():
     assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
+
+    classifier.info()
+    print(classifier)
