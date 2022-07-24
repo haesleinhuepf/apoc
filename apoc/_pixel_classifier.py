@@ -322,8 +322,14 @@ class PixelClassifier():
             .split(" ")
 
         result = {}
-        for i, feature in enumerate(feature_specification):
-            result[feature] = self._feature_importances[i]
+        if len(self._feature_importances) > 0 and len(feature_specification) > 0:
+
+            for i, _ in enumerate(self._feature_importances):
+                feature = feature_specification[i % len(feature_specification)]
+                suffix = ""
+                if i >= len(feature_specification):
+                    suffix = "_" + str(int(i / len(feature_specification)))
+                result[feature + suffix] = self._feature_importances[i]
 
         return result
 

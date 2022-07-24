@@ -16,8 +16,15 @@ def test_training_and_prediction():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.PixelClassifier(num_ensembles=10)
+    filename = "test_pixel_classifier.cl"
+    apoc.erase_classifier(filename)
+    classifier = apoc.PixelClassifier(opencl_filename=filename, num_ensembles=10)
+
+    assert len(classifier.feature_importances().keys()) == 0
+
     classifier.train(feature_specs, gt_image, image)
+
+    assert len(classifier.feature_importances().keys()) == 3
 
     print(classifier)
     assert "Ground truth dimensions: 2" in str(classifier)
@@ -49,8 +56,15 @@ def test_multichannel_training_and_prediction():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.PixelClassifier(num_ensembles=10)
+    filename = "test_pixel_classifier.cl"
+    apoc.erase_classifier(filename)
+    classifier = apoc.PixelClassifier(opencl_filename=filename, num_ensembles=10)
+
+    assert len(classifier.feature_importances().keys()) == 0
+
     classifier.train(feature_specs, gt_image, [image, image])
+
+    assert len(classifier.feature_importances().keys()) == 6
 
     result = classifier.predict(image=[image, image])
 
