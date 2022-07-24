@@ -15,10 +15,18 @@ def test_object_classification():
             mean_max_distance_to_centroid_ratio mean_max_distance_to_mass_center_ratio
             touching_neighbor_count average_distance_of_touching_neighbors average_distance_of_n_nearest_neighbors
             """.replace("\n", " ")
-    
+
     import apoc
     oc = apoc.ObjectClassifier(num_ensembles=10)
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
     oc.train(feature_definition, labels, annotation, image)
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
     result = oc.predict(labels, image)
 
     assert result.dtype == np.uint32
@@ -46,6 +54,11 @@ def test_object_classification():
     assert feature_importances["mean_max_distance_to_mass_center_ratio"] < 0.1
     assert feature_importances["touching_neighbor_count"] < 0.1
     assert feature_importances["average_distance_of_touching_neighbors"] < 0.1
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
+
 
 
 def test_object_classification_statistics():

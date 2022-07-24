@@ -45,6 +45,14 @@ class TableRowClassifier:
             self.feature_specification = self.classifier.feature_specification
             self._ordered_feature_names = self.feature_specification.replace(",", " ").split(" ")
 
+    def __str__(self) -> str:
+        """Return classifier information as string."""
+        return str(self.classifier)
+
+    def __repr__(self) -> str:
+        """Return classifier information as string."""
+        return str(self.classifier)
+
     @property
     def ordered_feature_names(self) -> List[str]:
         """The feature names used in the order they are used by the classifier.

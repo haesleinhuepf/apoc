@@ -22,11 +22,19 @@ def test_table_row_classification(tmpdir, feature_table):
     import apoc
     opencl_file = tmpdir.join("test.cl")
     oc = apoc.TableRowClassifier(opencl_file)
+
+    print(oc)
+    assert 'TableRowClassifier' in str(oc)
+
     oc.train(
         feature_table=feature_table,
         ground_truth=ground_truth,
         continue_training=False
     )
+
+    print(oc)
+    assert 'TableRowClassifier' in str(oc)
+
     result = oc.predict(feature_table)
 
     assert result.dtype == np.uint32
@@ -40,6 +48,10 @@ def test_table_row_classification(tmpdir, feature_table):
 
     # rerun classifier from file
     oc = apoc.TableRowClassifier(opencl_file)
+
+    print(oc)
+    assert 'TableRowClassifier' in str(oc)
+
     result = oc.predict(feature_table)
 
     assert result.dtype == np.uint32
@@ -49,6 +61,10 @@ def test_table_row_classification(tmpdir, feature_table):
     print(feature_importances)
     assert feature_importances["area"] > 0.4
     assert feature_importances["surface_area"] > 0.4
+
+    print(oc)
+    assert 'TableRowClassifier' in str(oc)
+
 
 @pytest.mark.parametrize("feature_table", [feature_table_dict, feature_table_data_frame])
 def test_with_nans(tmpdir, feature_table):

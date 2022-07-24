@@ -30,6 +30,9 @@ def test_multichannel_training_and_prediction():
 
     result = clf.predict(image=[image_ch1, image_ch2])
 
+    print(clf)
+    assert "Ground truth dimensions: 2" in str(clf)
+
     assert np.allclose(result, ref_image)
 
     clf = PixelClassifier(opencl_filename=cl_filename)
@@ -38,3 +41,6 @@ def test_multichannel_training_and_prediction():
 
     assert np.allclose(result, ref_image)
 
+    info = str(clf)
+    assert 'PixelClassifier' in info
+    print(clf)

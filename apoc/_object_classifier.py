@@ -28,6 +28,14 @@ class ObjectClassifier():
             overwrite_classname=self.__class__.__name__
     )
 
+    def __str__(self) -> str:
+        """Return classifier information as string."""
+        return str(self.classifier)
+
+    def __repr__(self) -> str:
+        """Return classifier information as string."""
+        return str(self.classifier)
+
     def train(self, features: str, labels, sparse_annotation, image=None, continue_training : bool = False):
         """
         Train a classifier that can differentiate label types according to intensity, size and shape.

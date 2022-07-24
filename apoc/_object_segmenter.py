@@ -20,7 +20,7 @@ class ObjectSegmenter(PixelClassifier):
         positive_class_identifier: int
             The class that identifies objects which should be returned as label image.
         """
-        super().__init__(opencl_filename=opencl_filename, max_depth =max_depth, num_ensembles=num_ensembles)
+        super().__init__(opencl_filename=opencl_filename, max_depth =max_depth, num_ensembles=num_ensembles, overwrite_classname=self.__class__.__name__)
 
         self.POSITIVE_CLASS_IDENTIFIER_KEY = "positive_class_identifier = "
 
@@ -65,4 +65,8 @@ class ObjectSegmenter(PixelClassifier):
         
         return cle.connected_components_labeling_diamond(binary)
 
+    def __str__(self):
+        info = super(ObjectSegmenter, self).__str__() + \
+                '\n'.join([f'Positive class identifier: {self.positive_class_identifier}'])
+        return info
 

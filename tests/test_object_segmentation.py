@@ -16,11 +16,32 @@ def test_object_segmentation():
 
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
-    classifier = apoc.ObjectSegmenter(positive_class_identifier=2, num_ensembles=10)
+    classifier = apoc.ObjectSegmenter(opencl_filename="test.cl", positive_class_identifier=2, num_ensembles=10)
+
+    print(classifier)
+    assert 'ObjectSegmenter' in str(classifier)
+    assert 'Positive class identifier: 2' in str(classifier)
+
     classifier.train(feature_specs, gt_image, image)
+
+    print(classifier)
+    assert 'ObjectSegmenter' in str(classifier)
+    assert 'Positive class identifier: 2' in str(classifier)
 
     result = classifier.predict(image=image)
 
     assert result.dtype == np.uint32
 
     assert np.allclose(result, ref_image)
+
+    classifier = apoc.ObjectSegmenter(opencl_filename="test.cl")
+
+    print(classifier)
+    assert 'ObjectSegmenter' in str(classifier)
+    assert 'Positive class identifier: 2' in str(classifier)
+
+    result = classifier.predict(image=image)
+
+    print(classifier)
+    assert 'ObjectSegmenter' in str(classifier)
+

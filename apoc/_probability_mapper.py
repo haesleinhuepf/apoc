@@ -20,3 +20,8 @@ class ProbabilityMapper(PixelClassifier):
         """
         super().__init__(opencl_filename=opencl_filename, max_depth=max_depth, num_ensembles=num_ensembles)
         self.output_probability_of_class = output_probability_of_class
+
+    def __str__(self):
+        info = super(ProbabilityMapper, self).__str__() + \
+                '\n'.join([f'Output probability of class: {self.output_probability_of_class}'])
+        return info
