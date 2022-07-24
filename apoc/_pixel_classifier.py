@@ -33,12 +33,12 @@ class PixelClassifier():
         self.opencl_file = opencl_filename
         self.classifier = None
 
-        classname_to_check = self.__class__.__name__
+        self.classname = self.__class__.__name__
         if overwrite_classname is not None:
-            classname_to_check = overwrite_classname
+            self.classname = overwrite_classname
 
-        if classname_to_check != _read_something_from_opencl_file(opencl_filename, self.CLASSIFIER_CLASS_NAME_KEY, classname_to_check):
-            raise TypeError("Loading '" + str(classname_to_check) + "' from '" + str(opencl_filename) + "' failed. Wrong classifier type.")
+        if self.classname != _read_something_from_opencl_file(opencl_filename, self.CLASSIFIER_CLASS_NAME_KEY, self.classname):
+            raise TypeError("Loading '" + str(self.classname) + "' from '" + str(opencl_filename) + "' failed. Wrong classifier type.")
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
@@ -47,8 +47,7 @@ class PixelClassifier():
         """Print general information about this classifier."""
 
         num_classes = _read_something_from_opencl_file(self.opencl_file, 'num_classes =', '')
-        classifier_type = _read_something_from_opencl_file(self.opencl_file, 'classifier_class_name =', '')
-        info = '\n'.join([f'Classifier type: {classifier_type}',
+        info = '\n'.join([f'Classifier type: {self.classname}',
                           '--- Random forest info ---',
                           f'Used features for training: {self.feature_specification}',
                           f'Training data dimensions: [{self.num_ground_truth_dimensions} x X x Y]',
