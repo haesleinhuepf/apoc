@@ -230,6 +230,10 @@ class ObjectClassifier():
                 n = int(key.replace("average_distance_of_n_nearest_neighbors=", ""))
                 distance_matrix = self._make_distance_matrix(labels, distance_matrix)
                 vector = cle.pull(cle.average_distance_of_n_shortest_distances(distance_matrix, n=n))[0]
+            elif len(key) == 0:
+                pass
+            else:
+                raise Exception("Feature " + key + " is not known!")
 
             if vector is not None:
                 if ground_truth is not None:
@@ -244,6 +248,17 @@ class ObjectClassifier():
         else:
             self._data['label'] = all_features['label']
             return result, None
+
+    def feature_importances(self):
+        """Provide feature importances about the trained Random Forest Classifier
+
+        The values are provided as dictionary {feature_name:portion_importance}.
+
+        See also
+        --------
+        ..[0] https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+        """
+        return self.classifier.feature_importances()
 
     def statistics(self):
         return self.classifier.statistics()

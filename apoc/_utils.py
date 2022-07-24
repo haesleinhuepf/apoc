@@ -139,6 +139,7 @@ def _read_something_from_opencl_file(opencl_filename, some_key:str, default_valu
 
     return default_value
 
+
 def erase_classifier(filename):
     """Deletes a file in case it exists.
 

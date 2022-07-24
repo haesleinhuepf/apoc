@@ -225,6 +225,17 @@ class TableRowClassifier:
         """
         return [np.asarray(feature_table[feature]) for feature in self.ordered_feature_names]
 
+    def feature_importances(self):
+        """Provide feature importances about the trained Random Forest Classifier
+
+        The values are provided as dictionary {feature_name:portion_importance}.
+
+        See also
+        --------
+        ..[0] https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+        """
+        return self.classifier.feature_importances()
+
     def statistics(self):
         """Provide statistics about the trained Random Forest Classifier
 
