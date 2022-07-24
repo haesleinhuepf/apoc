@@ -46,7 +46,10 @@ class PixelClassifier():
     def info(self) -> str:
         """Print general information about this classifier."""
 
-        num_classes = _read_something_from_opencl_file(self.opencl_file, 'num_classes =', '')
+        if self.classifier is not None:
+            num_classes = self.classifier.n_classes_
+        else:
+            num_classes = _read_something_from_opencl_file(self.opencl_file, 'num_classes =', '')
         info = '\n'.join([f'Classifier type: {self.classname}',
                           '--- Random forest info ---',
                           f'Used features for training: {self.feature_specification}',
