@@ -47,7 +47,8 @@ class PixelClassifier():
         """Print general information about this classifier."""
 
         num_classes = _read_something_from_opencl_file(self.opencl_file, 'num_classes =', '')
-        info = '\n'.join([f'Classifier type: {self.__class__.__name__}',
+        classifier_type = _read_something_from_opencl_file(self.opencl_file, 'classifier_class_name =', '')
+        info = '\n'.join([f'Classifier type: {classifier_type}',
                           '--- Random forest info ---',
                           f'Used features for training: {self.feature_specification}',
                           f'Training data dimensions: [{self.num_ground_truth_dimensions} x X x Y]',
