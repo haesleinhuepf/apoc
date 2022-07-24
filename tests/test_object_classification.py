@@ -18,7 +18,15 @@ def test_object_classification():
 
     import apoc
     oc = apoc.ObjectClassifier(num_ensembles=10)
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
     oc.train(feature_definition, labels, annotation, image)
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
     result = oc.predict(labels, image)
 
     assert result.dtype == np.uint32
@@ -27,9 +35,9 @@ def test_object_classification():
 
     assert np.allclose(reference, result)
 
-    info = str(oc)
-    assert 'ObjectClassifier' in info
     print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
 
 
 def test_object_classification_statistics():

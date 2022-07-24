@@ -17,7 +17,14 @@ def test_probability_mapper():
     feature_specs = "original gaussian_blur=1 sobel_of_gaussian_blur=1"
 
     classifier = apoc.ProbabilityMapper(output_probability_of_class=2, num_ensembles=10)
+
+    print(classifier)
+    assert "ProbabilityMapper" in str(classifier)
+
     classifier.train(feature_specs, gt_image, image)
+
+    print(classifier)
+    assert "ProbabilityMapper" in str(classifier)
 
     result = classifier.predict(image=image)
 
@@ -25,4 +32,5 @@ def test_probability_mapper():
 
     assert np.allclose(result, ref_image)
 
+    print(classifier)
     assert "ProbabilityMapper" in str(classifier)
