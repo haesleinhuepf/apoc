@@ -27,7 +27,7 @@ def test_object_classification():
 
     assert np.allclose(reference, result)
 
-    info = oc.info()
+    info = str(oc)
     assert 'ObjectClassifier' in info
     print(oc)
 

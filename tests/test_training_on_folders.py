@@ -36,6 +36,6 @@ def test_training_on_folders():
         # There are at least 4 objects in each image
         assert(labels.max() > 3)
 
-    info = segmenter.info()
+    info = str(segmenter)
     assert 'ObjectSegmenter' in info
     print(segmenter)

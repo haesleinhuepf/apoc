@@ -43,9 +43,8 @@ class PixelClassifier():
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
 
-    def info(self) -> str:
-        """Print general information about this classifier."""
-
+    def __str__(self) -> str:
+        """Display classifier information upon `print(classifier).`"""
         if self.classifier is not None:
             num_classes = self.classifier.n_classes_
         else:
@@ -59,10 +58,6 @@ class PixelClassifier():
                           f'Number of classes: {num_classes}'])
 
         return info
-
-    def __str__(self) -> str:
-        """Display classifier information upon `print(classifier).`"""
-        return self.info()
 
     def __repr__(self) -> str:
         """Display classifier information upon `>> classifier`"""

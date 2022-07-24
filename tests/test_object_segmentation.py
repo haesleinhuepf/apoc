@@ -25,5 +25,5 @@ def test_object_segmentation():
 
     assert np.allclose(result, ref_image)
 
-    classifier.info()
+    assert 'ObjectSegmenter' in str(classifier)
     print(classifier)

@@ -28,18 +28,13 @@ class ObjectClassifier():
             overwrite_classname=self.__class__.__name__
     )
 
-    def info(self) -> str:
-        """Print general information about this classifier."""
-
-        return self.classifier.info()
-
     def __str__(self) -> str:
-        """Display classifier information upon `print(classifier).`"""
-        return self.info()
+        """Return classifier information as string."""
+        return str(self.classifier)
 
     def __repr__(self) -> str:
-        """Display classifier information upon `>> classifier`"""
-        return self.info()
+        """Return classifier information as string."""
+        return str(self.classifier)
 
     def train(self, features: str, labels, sparse_annotation, image=None, continue_training : bool = False):
         """

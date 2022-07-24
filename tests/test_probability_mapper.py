@@ -24,3 +24,5 @@ def test_probability_mapper():
     assert result.dtype == np.float32
 
     assert np.allclose(result, ref_image)
+
+    assert "ProbabilityMapper" in str(classifier)

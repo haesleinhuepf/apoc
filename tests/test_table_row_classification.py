@@ -39,7 +39,7 @@ def test_table_row_classification(tmpdir, feature_table):
     assert result.dtype == np.uint32
     assert np.allclose(ground_truth, result)
 
-    info = oc.info()
+    info = str(oc)
     assert 'TableRowClassifier' in info
     print(oc)
 
