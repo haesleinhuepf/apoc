@@ -25,6 +25,7 @@ class PixelClassifier():
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
         self.NUM_GROUND_TRUTH_DIMENSIONS_KEY = "num_ground_truth_dimensions = "
         self.CLASSIFIER_CLASS_NAME_KEY = "classifier_class_name = "
+        self.NUM_FEATURES_KEY = "num_features = "
 
         self.max_depth = max_depth
         self.num_ensembles = num_ensembles
@@ -42,6 +43,7 @@ class PixelClassifier():
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
+        self.num_features = int(_read_something_from_opencl_file(opencl_filename, self.NUM_FEATURES_KEY, 0))
 
     def __str__(self) -> str:
         """Display classifier information upon `print(classifier).`"""
@@ -49,19 +51,23 @@ class PixelClassifier():
             num_classes = self.classifier.n_classes_
         else:
             num_classes = _read_something_from_opencl_file(self.opencl_file, 'num_classes =', '')
+
+        num_channels = int(self.num_features / len(self.feature_specification.replace(",", " ").split(" ")))
         info = '\n'.join([f'Classifier type: {self.classname}',
                           '--- Random forest info ---',
                           f'Used features for training: {self.feature_specification}',
                           f'Ground truth dimensions: {self.num_ground_truth_dimensions}',
                           f'Maximum depth: {self.max_depth}',
                           f'Number of ensembles: {self.num_ensembles}',
-                          f'Number of classes: {num_classes}'])
+                          f'Number of classes: {num_classes}',
+                          f'Number of features: {self.num_features}',
+                          f'Number of channels: {num_channels}'])
 
         return info
 
     def __repr__(self) -> str:
         """Display classifier information upon `>> classifier`"""
-        return self.info()
+        return str(self)
 
     def train(self, features, ground_truth, image=None, continue_training : bool = False):
         """
@@ -85,7 +91,6 @@ class PixelClassifier():
         # make features and convert in the right format
         self.num_ground_truth_dimensions = len(ground_truth.shape)
         features = self._make_features_potentially_multichannel(features, image)
-
         self.num_features = len(features)
         X, y = self._to_np(features, ground_truth)
 
@@ -200,7 +205,7 @@ class PixelClassifier():
         file1.write(self.FEATURE_SPECIFICATION_KEY + self.feature_specification + "\n")
         file1.write(self.NUM_GROUND_TRUTH_DIMENSIONS_KEY + str(self.num_ground_truth_dimensions) + "\n")
         file1.write("num_classes = " + str(self.classifier.n_classes_) + "\n")
-        file1.write("num_features = " + str(self.num_features) + "\n")
+        file1.write(self.NUM_FEATURES_KEY + str(self.num_features) + "\n")
         file1.write("max_depth = " + str(self.max_depth) + "\n")
         file1.write("num_trees = " + str(self.num_ensembles) + "\n")
         if extra_information is not None:
