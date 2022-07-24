@@ -230,6 +230,10 @@ class ObjectClassifier():
                 n = int(key.replace("average_distance_of_n_nearest_neighbors=", ""))
                 distance_matrix = self._make_distance_matrix(labels, distance_matrix)
                 vector = cle.pull(cle.average_distance_of_n_shortest_distances(distance_matrix, n=n))[0]
+            elif len(key) == 0:
+                pass
+            else:
+                raise Exception("Feature " + key + " is not known!")
 
             if vector is not None:
                 if ground_truth is not None:
