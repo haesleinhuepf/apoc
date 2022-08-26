@@ -87,6 +87,15 @@ You can install `apoc` using pip. Note: you need to install [pyopencl](https://d
     conda install pyopencl
     pip install apoc
 
+Mac-users please also install this:
+
+    conda install -c conda-forge ocl_icd_wrapper_apple
+    
+Linux users please also install this:
+    
+    conda install -c conda-forge ocl-icd-system
+
+
 ## Contributing
 
 Contributions are very welcome. Tests can be run with `pytest`, please ensure
