@@ -210,6 +210,7 @@ class ObjectClassifier():
         touch_matrix = None
         distance_matrix = None
         mask = None
+        neighbor_statistics = None
 
         if ground_truth is not None:
             mask = ground_truth > 0
@@ -233,7 +234,14 @@ class ObjectClassifier():
             elif len(key) == 0:
                 pass
             else:
-                raise Exception("Feature " + key + " is not known!")
+                # test if the feature is in neighbor statistics
+                if neighbor_statistics is None:
+                    neighbor_statistics = cle.statistics_of_labelled_neighbors(labels)
+                if key in neighbor_statistics:
+                    values = [0] + neighbor_statistics[key].tolist()
+                    vector = np.asarray(values)
+                else:
+                    raise Exception("Feature " + key + " is not known!")
 
             if vector is not None:
                 if ground_truth is not None:
