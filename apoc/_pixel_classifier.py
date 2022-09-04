@@ -46,6 +46,7 @@ class PixelClassifier():
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
         all_feature_importances = _read_something_from_opencl_file(opencl_filename, self.FEATURE_IMPORTANCES_SPECIFICATION_KEY, "")
         if len(all_feature_importances) > 0:
+            all_feature_importances = all_feature_importances.replace(" = ", "")
             self._feature_importances = [float(f) for f in all_feature_importances.split(",")]
         else:
             self._feature_importances = []
