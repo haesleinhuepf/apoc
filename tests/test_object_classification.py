@@ -66,6 +66,88 @@ def test_object_classification():
     print(oc)
     assert 'ObjectClassifier' in str(oc)
 
+def test_object_classification_with_neighbors():
+    labels = np.asarray([
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 0],
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 0],
+        [0, 5, 5, 6, 6, 7, 7, 8, 8, 0],
+        [0, 5, 5, 6, 6, 7, 7, 8, 8, 0],
+        [0, 9, 9,10,10,11,11,12,12, 0],
+        [0, 9, 9,10,10,11,11,12,12, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ])
+    image = np.zeros(labels.shape)
+    annotation = np.asarray([
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 2, 2, 0, 0, 0, 0, 0],
+        [0, 0, 0, 2, 2, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ])
+    reference = np.asarray([
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 2, 2, 2, 2, 1, 1, 0],
+        [0, 1, 1, 2, 2, 2, 2, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ])
+    feature_definition = """
+                touching_neighbor_count
+                proximal_neighbor_count_d10
+                distance_to_most_distant_other
+                touch_count_sum
+                minimum_touch_count
+                maximum_touch_count
+                minimum_touch_portion
+                maximum_touch_portion
+                standard_deviation_touch_portion
+                """.replace("\n", " ")
+
+    import apoc
+    filename = "test_object_classification.cl"
+    apoc.erase_classifier(filename)
+    oc = apoc.ObjectClassifier(opencl_filename=filename, num_ensembles=10)
+
+    assert len(oc.feature_importances().keys()) == 0
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
+    oc.train(feature_definition, labels, annotation, image)
+
+    print(oc.feature_importances().keys())
+
+    assert len(oc.feature_importances().keys()) == 9
+
+    print(oc)
+    assert 'ObjectClassifier' in str(oc)
+
+    result = oc.predict(labels, image)
+
+    assert result.dtype == np.uint32
+
+    print(result)
+
+    assert np.allclose(reference, result)
+    print(oc.feature_importances())
+
+    feature_importances = oc.feature_importances()
+    assert feature_importances["touching_neighbor_count"] < 0.1
+    assert feature_importances["proximal_neighbor_count_d10"] < 0.1
+    assert feature_importances["distance_to_most_distant_other"] > 0.1
+    assert feature_importances["touch_count_sum"] < 0.1
+    assert feature_importances["minimum_touch_count"] < 0.1
+    assert feature_importances["maximum_touch_count"] > 0.1
+    assert feature_importances["minimum_touch_portion"] < 0.1
+    assert feature_importances["maximum_touch_portion"] < 0.1
+    assert feature_importances["standard_deviation_touch_portion"] > 0.1
 
 def test_illegal_feature_name_causes_error():
     def test_object_classification():
