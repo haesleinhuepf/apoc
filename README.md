@@ -82,7 +82,11 @@ imshow(classification_result)
 
 ## Installation
 
-You can install `apoc` using pip. Note: you need to install [pyopencl](https://documen.tician.de/pyopencl/) in advance using conda:
+You can install `apoc` using conda or pip:
+
+    conda install -c conda-forge apoc-backend
+
+OR:
 
     conda install pyopencl
     pip install apoc
