@@ -201,6 +201,7 @@ def train_classifier_from_image_folders(classifier, features, **kwargs):
     """
     import os
     from skimage.io import imread
+    from pathlib import Path
 
     any_folder = kwargs[list(kwargs.keys())[0]]
     file_list = os.listdir(any_folder)
@@ -213,7 +214,7 @@ def train_classifier_from_image_folders(classifier, features, **kwargs):
             'continue_training': continue_training
         }
         for key, value in kwargs.items():
-            kwargs_to_pass[key] = imread(kwargs[key] + filename)
+            kwargs_to_pass[key] = imread(Path(kwargs[key]) / filename)
 
         # run training
         classifier.train(**kwargs_to_pass)
