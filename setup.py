@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="apoc",
-    version="0.10.0",
+    version="0.11.0",
     author="haesleinhuepf",
     author_email="robert.haase@tu-dresden.de",
     description="Accelerated Pixel and Object Classifiers based on OpenCL",
@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/haesleinhuepf/apoc",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["numpy>=1.21", "scikit-learn>=0.24.2", "pyclesperanto-prototype>=0.19.0", "pandas"],
+    install_requires=["numpy>=1.21", "scikit-learn>=0.24.2", "pyclesperanto-prototype>=0.21.1", "pandas"],
     python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",

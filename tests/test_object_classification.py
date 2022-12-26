@@ -142,9 +142,9 @@ def test_object_classification_with_neighbors():
     assert feature_importances["touching_neighbor_count"] < 0.3
     assert feature_importances["proximal_neighbor_count_d10"] < 0.1
     assert feature_importances["distance_to_most_distant_other"] > 0.1
-    assert feature_importances["touch_count_sum"] < 0.1
+    assert feature_importances["touch_count_sum"] < 0.5
     assert feature_importances["minimum_touch_count"] < 0.1
-    assert feature_importances["maximum_touch_count"] > 0.1
+    assert feature_importances["maximum_touch_count"] < 0.1
     assert feature_importances["minimum_touch_portion"] < 0.1
     assert feature_importances["maximum_touch_portion"] < 0.1
     assert feature_importances["standard_deviation_touch_portion"] > 0.1
