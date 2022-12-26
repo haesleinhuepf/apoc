@@ -1,4 +1,4 @@
-def test_label_merger():
+def test_object_merger():
     import apoc
     from skimage.io import imread, imshow
     import pyclesperanto_prototype as cle
@@ -14,10 +14,10 @@ def test_label_merger():
 
     feature_definition = "touch_portion mean_touch_intensity"
 
-    classifier_filename = "label_merger.cl"
+    classifier_filename = "object_merger.cl"
 
     apoc.erase_classifier(classifier_filename)
-    classifier = apoc.LabelMerger(opencl_filename=classifier_filename)
+    classifier = apoc.ObjectMerger(opencl_filename=classifier_filename)
 
     classifier.train(features=feature_definition,
                      labels=oversegmented,

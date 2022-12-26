@@ -4,7 +4,7 @@ import pyclesperanto_prototype as cle
 from ._probability_mapper import PixelClassifier
 
 
-class LabelMerger:
+class ObjectMerger:
     def __init__(
             self,
             opencl_filename="temp_label_merger.cl",
