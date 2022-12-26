@@ -51,7 +51,8 @@ class ObjectMerger:
         features: Space separated string containing those:
             'mean_touch_intensity',
             'touch_portion',
-            'touch_count'
+            'touch_count',
+            'centroid_distance'
         labels: label image
         sparse_annotation: label image with annotations
         image: intensity image (optional)
@@ -122,6 +123,9 @@ class ObjectMerger:
                 features.append(cle.generate_touch_portion_matrix(labels))
             elif f == "touch_count":
                 features.append(cle.generate_touch_count_matrix(labels))
+            elif f == "centroid_distance":
+                centroids = cle.centroids_of_labels(labels)
+                features.append(cle.generate_distance_matrix(centroids, centroids))
             else:
                 raise ValueError("Unknown feature: " + f)
 
