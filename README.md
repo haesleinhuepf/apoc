@@ -69,6 +69,13 @@ imshow(classification_result)
 ```
 ![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/object_classification_result1.png)
 
+## Label merger
+
+APOC also comes with a `LabelMerger` allowing to train a classifier on label edges for deciding to merge them or to keep them.
+([See full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/merge_labels.ipynb))
+
+![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/label_merger.png)
+
 ## More detailed examples
 
 * [Object segmentation](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)  
