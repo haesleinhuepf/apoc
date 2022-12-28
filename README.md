@@ -21,9 +21,9 @@ For training classifiers from pairs of image and label-mask folders, please see
 
 With a given blobs image and a corresponding annotation...
 ```python
+import apoc
 from skimage.io import imread, imshow
 import pyclesperanto_prototype as cle
-import apoc
 
 image = imread('blobs.tif')
 imshow(image)
@@ -52,7 +52,7 @@ cle.imshow(segmentation_result, labels=True)
 
 ## Object classification
 
-With a given annotation, blobs can also be classified according to their shape ([see full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)).
+With a given annotation, blobs can also be classified according to their shape ([see full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_classification.ipynb)).
 ```python
 features = 'area,mean_max_distance_to_centroid_ratio,standard_deviation_intensity'
 
@@ -65,14 +65,53 @@ classifier.train(features, segmentation_result, annotation, image)
 # Prediction / determine object classification
 classification_result = classifier.predict(segmentation_result, image)
 
-imshow(classification_result)
+cle.imshow(classification_result, labels=True)
 ```
 ![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/object_classification_result1.png)
+
+## Object selector
+
+If the desired analysis goal is to select objects of a specific class, the object selector can be used ([see full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_selector.ipynb)).
+
+```python
+features = 'area,mean_max_distance_to_centroid_ratio,standard_deviation_intensity'
+
+cl_filename = "object_selector.cl"
+
+# Create an object classifier
+apoc.erase_classifier(cl_filename) # delete it if it was existing before
+classifier = apoc.ObjectSelector(cl_filename, positive_class_identifier=1)
+
+# train it
+classifier.train(features, labels, annotation, image)
+
+result = classifier.predict(labels, image)
+cle.imshow(result, labels=True)
+```
+
+![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/object_selector.png)
 
 ## Object merger
 
 APOC also comes with a `ObjectMerger` allowing to train a classifier on label edges for deciding to merge them or to keep them.
 ([See full example](https://github.com/haesleinhuepf/apoc/blob/main/demo/merge_objects.ipynb))
+
+```python
+feature_definition = "touch_portion mean_touch_intensity"
+
+classifier_filename = "label_merger.cl"
+
+apoc.erase_classifier(classifier_filename)
+classifier = apoc.ObjectMerger(opencl_filename=classifier_filename)
+
+classifier.train(features=feature_definition,
+                 labels=oversegmented,
+                 sparse_annotation=annotation,
+                 image=background_subtracted) 
+
+merged_labels = classifier.predict(labels=oversegmented, image=background_subtracted)
+cle.imshow(merged_labels, labels=True)
+```
 
 ![img.png](https://github.com/haesleinhuepf/apoc/raw/main/docs/object_merger.png)
 

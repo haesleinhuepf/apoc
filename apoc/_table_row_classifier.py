@@ -152,6 +152,17 @@ class TableRowClassifier:
 
         return np.asarray(output[0]).astype(np.uint32)
 
+    def to_opencl_file(self, filename, extra_information: str = None, overwrite_classname:str = None):
+        """Save the classifier to an OpenCL-file.
+
+        See Also
+        --------
+        .. PixelClassifier.to_opencl_file()
+        """
+        if overwrite_classname is None:
+            overwrite_classname = self.__class__.__name__
+        return self.classifier.to_opencl_file(filename=filename, extra_information=extra_information, overwrite_classname=overwrite_classname)
+
     def _prepare_feature_table(
             self,
             feature_table: Dict[str, Union[List[float], np.ndarray]],
