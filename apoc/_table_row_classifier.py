@@ -159,6 +159,8 @@ class TableRowClassifier:
         --------
         .. PixelClassifier.to_opencl_file()
         """
+        if overwrite_classname is None:
+            overwrite_classname = self.__class__.__name__
         return self.classifier.to_opencl_file(filename=filename, extra_information=extra_information, overwrite_classname=overwrite_classname)
 
     def _prepare_feature_table(

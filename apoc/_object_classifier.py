@@ -24,12 +24,12 @@ class ObjectClassifier():
         self._classname = self.__class__.__name__
         if overwrite_classname is not None:
             self._classname = overwrite_classname
-
+        self.opencl_filename = opencl_filename
         self.classifier = TableRowClassifier(
             opencl_filename=opencl_filename,
             max_depth=max_depth,
             num_ensembles=num_ensembles,
-            overwrite_classname=overwrite_classname
+            overwrite_classname=self._classname
     )
 
     def __str__(self) -> str:
@@ -69,6 +69,7 @@ class ObjectClassifier():
 
         selected_features, gt = self._make_features(self.classifier.feature_specification, labels, sparse_annotation, image)
         self.classifier.train(selected_features, gt, continue_training=continue_training)
+        self.to_opencl_file(self.opencl_filename, overwrite_classname=self.__class__.__name__)
 
     def predict(self, labels, image=None):
         """Predict object class from label image and optional intensity image.
@@ -107,6 +108,8 @@ class ObjectClassifier():
         --------
         .. PixelClassifier.to_opencl_file()
         """
+        if overwrite_classname is None:
+            overwrite_classname = self.__class__.__name__
         return self.classifier.to_opencl_file(filename=filename, extra_information=extra_information,
                                               overwrite_classname=overwrite_classname)
 

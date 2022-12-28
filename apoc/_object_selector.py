@@ -72,7 +72,8 @@ class ObjectSelector():
         extra = self.POSITIVE_CLASS_IDENTIFIER_KEY + str(self.positive_class_identifier) + "\n"
         if extra_information is not None:
             extra = extra + extra_information
-
+        if overwrite_classname is None:
+            overwrite_classname = self.__class__.__name__
         return self.classifier.to_opencl_file(filename=filename, extra_information=extra, overwrite_classname=overwrite_classname)
 
     def feature_importances(self):

@@ -37,7 +37,7 @@ class ObjectSegmenter(PixelClassifier):
         self.positive_class_identifier_from_file = self.positive_class_identifier
         super().train(features, ground_truth, image, continue_training=continue_training)
 
-    def to_opencl_file(self, filename, extra_information:str = None):
+    def to_opencl_file(self, filename, extra_information:str = None, overwrite_classname: str = None):
         """Save the classifier to an OpenCL-file. The file will also contain the selected class identifier.
 
         See Also
@@ -47,8 +47,13 @@ class ObjectSegmenter(PixelClassifier):
         extra = self.POSITIVE_CLASS_IDENTIFIER_KEY + str(self.positive_class_identifier) + "\n"
         if extra_information is not None:
             extra = extra + extra_information
+        if overwrite_classname is None:
+            overwrite_classname = self.__class__.__name__
+        return super().to_opencl_file(
+            filename=filename,
+            extra_information=extra,
+            overwrite_classname=overwrite_classname)
 
-        return super().to_opencl_file(filename=filename, extra_information=extra)
 
     def predict(self, image=None, features=None):
         """Apply the classifier + class selection + connected component labeling to a given image.
