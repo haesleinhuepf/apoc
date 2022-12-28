@@ -143,6 +143,21 @@ class ObjectMerger:
 
         return features
 
+    def feature_importances(self):
+        """Provide feature importances about the trained Random Forest Classifier
+
+        The values are provided as dictionary {feature_name:portion_importance}.
+
+        See also
+        --------
+        ..[0] https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+        """
+        return self.classifier.feature_importances()
+
+    def statistics(self):
+        return self.classifier.statistics()
+
+
 def get_statistics(statistics, image, labels):
     if statistics is not None:
         return statistics
