@@ -52,7 +52,11 @@ class ObjectMerger:
             'mean_touch_intensity',
             'touch_portion',
             'touch_count',
-            'centroid_distance'
+            'centroid_distance',
+            'mean_intensity_difference',
+            'standard_deviation_intensity_difference',
+            'area_difference',
+            'mean_max_distance_to_centroid_ratio_difference'
         labels: label image
         sparse_annotation: label image with annotations
         image: intensity image (optional)
