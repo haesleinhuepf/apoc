@@ -115,8 +115,16 @@ class ObjectMerger:
         Produce feature images from label image and intensity image according to specification.
         See train() for the available feature list.
         """
+        statistics = None
+
+        # measures that can be computed from label statistics
+        # where the difference between labels might be good merge criterion
+        difference_measures = ["mean_intensity", "standard_deviation_intensity", "area",
+                               "mean_max_distance_to_centroid_ratio"]
+
         features = []
         for f in feature_specification.split(" "):
+            f_ = f.replace("_difference", "")
             if f == "mean_touch_intensity":
                 features.append(cle.generate_touch_mean_intensity_matrix(cle.asarray(image).astype(int), labels))
             elif f == "touch_portion":
@@ -126,7 +134,16 @@ class ObjectMerger:
             elif f == "centroid_distance":
                 centroids = cle.centroids_of_labels(labels)
                 features.append(cle.generate_distance_matrix(centroids, centroids))
+            elif f_ in difference_measures:
+                statistics = get_statistics(statistics, image, labels)
+                measurement = statistics[f_]
+                features.append(cle.generate_distance_matrix([list(measurement)], [list(measurement)]))
             else:
                 raise ValueError("Unknown feature: " + f)
 
         return features
+
+def get_statistics(statistics, image, labels):
+    if statistics is not None:
+        return statistics
+    return cle.statistics_of_labelled_pixels(image, labels)
