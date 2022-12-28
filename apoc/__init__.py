@@ -12,4 +12,4 @@ from ._utils import list_available_object_classification_features
 from ._utils import train_classifier_from_image_folders
 from ._feature_sets import PredefinedFeatureSet
 
-__version__ = "0.11.0"
+__version__ = "0.12.0"
