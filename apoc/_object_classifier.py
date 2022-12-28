@@ -3,7 +3,7 @@ import numpy as np
 
 
 class ObjectClassifier():
-    def __init__(self, opencl_filename="temp_object_classifier.cl", max_depth: int = 2, num_ensembles: int = 100):
+    def __init__(self, opencl_filename="temp_object_classifier.cl", max_depth: int = 2, num_ensembles: int = 100, overwrite_classname:str=None):
         """
         A RandomForestClassifier for label classification that converts itself to OpenCL after training.
 
@@ -21,11 +21,15 @@ class ObjectClassifier():
 
         self._data = {}
 
+        self._classname = self.__class__.__name__
+        if overwrite_classname is not None:
+            self._classname = overwrite_classname
+
         self.classifier = TableRowClassifier(
             opencl_filename=opencl_filename,
             max_depth=max_depth,
             num_ensembles=num_ensembles,
-            overwrite_classname=self.__class__.__name__
+            overwrite_classname=overwrite_classname
     )
 
     def __str__(self) -> str:
@@ -95,6 +99,16 @@ class ObjectClassifier():
         cle.replace_intensities(labels, output, result_labels)
 
         return result_labels
+
+    def to_opencl_file(self, filename, extra_information: str = None, overwrite_classname: str = None):
+        """Save the classifier to an OpenCL-file.
+
+        See Also
+        --------
+        .. PixelClassifier.to_opencl_file()
+        """
+        return self.classifier.to_opencl_file(filename=filename, extra_information=extra_information,
+                                              overwrite_classname=overwrite_classname)
 
     def _make_features(self, features: str, labels, annotation=None, image=None):
         """Determine requested features. If annotation is provided, also a ground-truth vector will be returned.
