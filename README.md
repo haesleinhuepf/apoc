@@ -1,4 +1,4 @@
-# Accelerated Pixel and Object Classifiers (APOC)
+# Accelerated Pixel and Object Classification (APOC)
 [![License](https://img.shields.io/pypi/l/apoc.svg?color=green)](https://github.com/haesleinhuepf/apoc/raw/main/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/apoc.svg?color=green)](https://pypi.org/project/apoc)
 [![Python Version](https://img.shields.io/pypi/pyversions/apoc.svg?color=green)](https://python.org)
@@ -7,8 +7,12 @@
 [![Development Status](https://img.shields.io/pypi/status/apoc.svg)](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha)
 [![DOI](https://zenodo.org/badge/412505712.svg)](https://zenodo.org/badge/latestdoi/412505712)
 
-[clesperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/) to classify pixels and objects in images, on a [GPU](https://en.wikipedia.org/wiki/Graphics_processing_unit) using [OpenCL](https://www.khronos.org/opencl/).
-This repository contains the backend for python developers. User-friendly plugins for [Fiji](https://fiji.sc) and [napari](https://napari.org) can be found here:
+[clesperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/) to classify pixels, objects and edges in images, on a [GPU](https://en.wikipedia.org/wiki/Graphics_processing_unit) using [OpenCL](https://www.khronos.org/opencl/).
+
+TL;DR: Graphical abstract ([source](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_apoc.ipynb))
+![](https://github.com/haesleinhuepf/apoc/raw/main/docs/graphical_abstract.png)
+
+This repository contains the backend for Python developers. User-friendly plugins for [Fiji](https://fiji.sc) and [napari](https://napari.org) can be found here:
 * [napari-accelerated-pixel-and-object-classification](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification)
 * [clijx-accelerated-pixel-and-object-classification](https://github.com/clij/clijx-accelerated-pixel-and-object-classification)
 
@@ -117,14 +121,7 @@ cle.imshow(merged_labels, labels=True)
 
 ## More detailed examples
 
-* [Object segmentation](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb)  
-* [Object classification](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demo_object_classification.ipynb)  
-* [Object classification based on custom measurement tables](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/table_row_classification.ipynb)  
-* [Pixel classifier (including benchmarking)](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/benchmarking_pixel_classifier.ipynb).
-* [Output probability maps](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demo_probability_mapper.ipynb)  
-* [Continue training of pixel classifiers using multiple training image pairs](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/demp_pixel_classifier_continue_training.ipynb)
-* [Generating custom feature stacks](https://nbviewer.jupyter.org/github/haesleinhuepf/apoc/blob/main/demo/feature_stacks.ipynb)
-
+More example notebooks are available in [this folder](https://github.com/haesleinhuepf/apoc/tree/main/demo).
 
 ## Installation
 
