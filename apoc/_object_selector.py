@@ -2,7 +2,7 @@ from ._object_classifier import ObjectClassifier
 from ._utils import _read_something_from_opencl_file
 
 class ObjectSelector():
-    def __init__(self, opencl_filename="temp_object_classifier.cl", max_depth: int = 2, num_ensembles: int = 100, positive_class_identifier : int = 2):
+    def __init__(self, opencl_filename="temp_object_selector.cl", max_depth: int = 2, num_ensembles: int = 100, positive_class_identifier : int = 2):
         """
         A RandomForestClassifier for object selection according to a label classification
         that converts itself to OpenCL after training. The selector uses an ObjectClassifer under the hood
