@@ -23,15 +23,14 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest] # windows-latest and macos-latest disabled because pocl installation doesnt work
-        python-version: [3.8, 3.9, '3.10']
+        python-version: ['3.11', '3.12', '3.13', '3.14']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          submodules: recursive
           python-version: ${{ matrix.python-version }}
 
       # these libraries, along with pytest-xvfb (added in the `deps` in tox.ini),
@@ -55,7 +54,7 @@ jobs:
       # and
       # tox-conda: https://github.com/tox-dev/tox-conda
       - name: Set up conda ${{ matrix.python-version }}
-        uses: conda-incubator/setup-miniconda@v2.0.0
+        uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           activate-environment: test
@@ -72,24 +71,17 @@ jobs:
         shell: bash -l {0}
         run: |
           python --version
-          conda install -y pyopencl pip setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt pytest-xvfb pandas
-          # pip install setuptools tox tox-gh-actions
+          conda install -y pyopencl pip setuptools wheel pytest pytest-cov
+          pip install scikit-image pandas
 
           pip install -e .
-      # this runs the platform-specific tests declared in tox.ini
-      #- name: Install tox-conda
-      #  run: pip install tox-conda
-      #- name: Test with tox
-      #  run: tox
-      #  env:
-      #    PLATFORM: ${{ matrix.platform }}
       - name: Test
         shell: bash -l {0}
         run: |
           pytest -v --cov=./ --cov-report=xml
 
       - name: Coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
 
   deploy:
     # this will run when you have tagged a commit, starting with "v*"
@@ -99,9 +91,9 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'tags')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.x"
       - name: Install dependencies

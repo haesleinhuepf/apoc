@@ -2,7 +2,6 @@ from typing import Union
 
 import pyclesperanto_prototype as cle
 import inspect
-import pyopencl
 from ._feature_sets import PredefinedFeatureSet
 import os
 
