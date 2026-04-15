@@ -11,7 +11,7 @@ license = { text = "BSD" }
 authors = [
     { name = "haesleinhuepf", email = "robert.haase@tu-dresden.de" }
 ]
-requires-python = ">=3.8,<3.14"
+requires-python = ">=3.8,<3.13"
 dependencies = [
     "numpy<2.0",
     "scikit-learn>=0.24.2,<1.4.0",
@@ -26,7 +26,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
