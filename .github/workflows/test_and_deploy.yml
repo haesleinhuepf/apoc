@@ -72,8 +72,6 @@ jobs:
         run: |
           python --version
           conda install -y pyopencl pip setuptools wheel pytest pytest-cov
-          pip install scikit-image pandas
-
           pip install -e .
       - name: Test
         shell: bash -l {0}
@@ -99,12 +97,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -U setuptools setuptools_scm wheel twine
+          pip install -U build twine
       - name: Build and publish
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.TWINE_API_KEY }}
         run: |
           git tag
-          python setup.py sdist bdist_wheel
+          python -m build
           twine upload dist/*

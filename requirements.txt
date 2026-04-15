@@ -1,5 +1,0 @@
-numpy<2.0
-scikit-learn>=0.24.2,<1.4.0
-pyclesperanto-prototype>=0.24.1
-pandas>=2.0.0
-scikit-image>=0.22.0
