@@ -41,6 +41,13 @@ jobs:
           cache-environment: true
           cache-downloads: true
 
+      - name: Cache pip downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: pip-${{ runner.os }}-py${{ matrix.python-version }}-
+
       - name: Install package
         shell: bash -el {0}
         run: pip install -e .
