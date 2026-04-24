@@ -65,7 +65,7 @@ class ObjectSegmenter(PixelClassifier):
         self.positive_class_identifier = self.positive_class_identifier_from_file
         result = super().predict(features=features, image=image)
 
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
         binary = cle.equal_constant(result, constant=self.positive_class_identifier)
         
         return cle.connected_components_labeling_diamond(binary)

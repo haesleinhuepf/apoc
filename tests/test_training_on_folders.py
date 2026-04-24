@@ -2,7 +2,7 @@ def test_training_on_folders():
     import apoc
     import os
     from skimage.io import imread
-    import pyclesperanto_prototype as cle
+    import pyclesperanto as cle
     import matplotlib.pyplot as plt
 
     image_folder = "demo/folder/images/"
