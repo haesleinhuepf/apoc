@@ -112,7 +112,7 @@ def test_compare_cpu_gpu_prediction():
     result_cpu = classifier._predict_cpu(image=image)
     result_gpu = classifier.predict(image=image)
 
-    import pyclesperanto_prototype as cle
+    import pyclesperanto as cle
 
     same = cle.equal(result_gpu, result_cpu)
     num_same = cle.sum_of_all_pixels(same)

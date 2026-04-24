@@ -2,7 +2,7 @@ from apoc import generate_feature_stack
 import apoc
 from skimage.io import imread
 from pathlib import Path
-import pyclesperanto_prototype as cle
+import pyclesperanto as cle
 
 def test_generate_feature_stack():
     root = Path(apoc.__file__).parent

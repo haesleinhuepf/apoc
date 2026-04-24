@@ -1,6 +1,6 @@
 def test_object_selector():
     from skimage.io import imread
-    import pyclesperanto_prototype as cle
+    import pyclesperanto as cle
     import pandas as pd
     import numpy as np
     import apoc

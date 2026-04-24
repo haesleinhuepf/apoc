@@ -1,7 +1,7 @@
 def test_object_merger():
     import apoc
     from skimage.io import imread, imshow
-    import pyclesperanto_prototype as cle
+    import pyclesperanto as cle
     import numpy as np
 
     image = imread('demo/membrane2d.tif')
@@ -31,7 +31,7 @@ def test_object_merger():
 def test_features():
     import apoc
     from skimage.io import imread, imshow
-    import pyclesperanto_prototype as cle
+    import pyclesperanto as cle
     import numpy as np
 
     image = imread('demo/membrane2d.tif')

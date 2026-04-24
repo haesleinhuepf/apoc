@@ -1,6 +1,6 @@
 from typing import Union
 
-import pyclesperanto_prototype as cle
+import pyclesperanto as cle
 import inspect
 from ._feature_sets import PredefinedFeatureSet
 import os
@@ -95,15 +95,20 @@ def _apply_operation(operation, input_image, output_image, numeric_parameter):
     """
     func = getattr(cle, operation)
     sig = inspect.signature(func)
-    if len(sig.parameters.keys()) == 2:
+
+    # get a list of parameter names
+    parameter_names = list(sig.parameters.keys())
+    parameter_names.remove("device")
+
+    if len(parameter_names) == 2:
         func(input_image, output_image)
-    elif len(sig.parameters.keys()) == 3:
+    elif len(parameter_names) == 3:
         func(input_image, output_image, numeric_parameter)
-    elif len(sig.parameters.keys()) == 4:
+    elif len(parameter_names) == 4:
         func(input_image, output_image, numeric_parameter, numeric_parameter)
-    elif len(sig.parameters.keys()) == 5:
+    elif len(parameter_names) == 5:
         func(input_image, output_image, numeric_parameter, numeric_parameter, numeric_parameter)
-    elif len(sig.parameters.keys()) == 8:
+    elif len(parameter_names) == 8:
         # e.g. difference_of_gaussian
         func(input_image, output_image, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 0.9, numeric_parameter * 1.1, numeric_parameter * 1.1, numeric_parameter * 1.1)
     else:
@@ -158,7 +163,7 @@ def list_available_object_classification_features():
     list(str)
     """
     import numpy as np
-    from pyclesperanto_prototype import statistics_of_labelled_pixels
+    from pyclesperanto import statistics_of_labelled_pixels
 
     dummy_image = np.asarray([[0,1]])
     stats = statistics_of_labelled_pixels(dummy_image, dummy_image)

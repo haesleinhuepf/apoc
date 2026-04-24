@@ -1,4 +1,6 @@
+import os
 import warnings
+
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from ._converter import RFC_to_OCL
@@ -22,6 +24,7 @@ class PixelClassifier():
         --------
             https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
         """
+        import apoc
         self.FEATURE_SPECIFICATION_KEY = "feature_specification = "
         self.FEATURE_IMPORTANCES_SPECIFICATION_KEY = "feature_importances = "
         self.NUM_GROUND_TRUTH_DIMENSIONS_KEY = "num_ground_truth_dimensions = "
@@ -41,6 +44,12 @@ class PixelClassifier():
 
         if self.classname != _read_something_from_opencl_file(opencl_filename, self.CLASSIFIER_CLASS_NAME_KEY, self.classname):
             raise TypeError("Loading '" + str(self.classname) + "' from '" + str(opencl_filename) + "' failed. Wrong classifier type.")
+        if os.path.exists(opencl_filename):
+            if apoc_version := _read_something_from_opencl_file(opencl_filename, "apoc_version =", None) is not None:
+                version = apoc_version.split(".")
+                if int(version[0]) > 0 or int(version[1]) > 12:
+                    warnings.warn("The classifier was trained with apoc version " + apoc_version + ". You are using version " + str(apoc.__version__) + ". In apoc version 0.14.0 breaking changes were introduced that may cause classifiers generating different results compare to older apoc versions. Consider retraining your classifier for the newest version of apoc. Alternatively, install an older version of apoc (e.g. with `pip install apoc==0.12.0`).")
+
 
         self.feature_specification = _read_something_from_opencl_file(opencl_filename, self.FEATURE_SPECIFICATION_KEY, "Custom/unkown")
         self.num_ground_truth_dimensions = int(_read_something_from_opencl_file(opencl_filename, self.NUM_GROUND_TRUTH_DIMENSIONS_KEY, 0))
@@ -139,11 +148,11 @@ class PixelClassifier():
 
         features = self._make_features_potentially_multichannel(features, image)
 
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
 
         if self.output_probability_of_class == -1:
             # produce a label image
-            output = cle.create_labels_like(features[0])
+            output = cle.create_like(features[0],  dtype=np.uint32)
         else:
             # produce a probability map
             output = cle.create(features[0].shape) # create float image
@@ -154,7 +163,16 @@ class PixelClassifier():
 
         parameters['out'] = output
 
-        cle.execute(None, self.opencl_file, "predict", features[0].shape, parameters)
+        file_content = open(self.opencl_file).read()
+
+        #cle.execute(None, self.opencl_file, "predict", features[0].shape, parameters)
+        cle.execute(
+            kernel_source=file_content,
+            kernel_name="predict",
+            global_size=features[0].shape,
+            local_size=(0, 0, 0),
+            parameters=parameters,
+        )
 
         return output
 

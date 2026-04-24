@@ -1,5 +1,5 @@
 from typing import Dict, List, Union, Optional
-import pyclesperanto_prototype as cle
+import pyclesperanto as cle
 
 from ._probability_mapper import PixelClassifier
 

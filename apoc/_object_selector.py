@@ -53,7 +53,7 @@ class ObjectSelector():
         --------
         .. ObjectClassifier.predict()
         """
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
         self.positive_class_identifier = self.positive_class_identifier_from_file
 
         classification_image = self.classifier.predict(labels, image)

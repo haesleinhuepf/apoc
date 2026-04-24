@@ -84,7 +84,7 @@ class ObjectClassifier():
         label image representing a semantic segmentation: pixel intensities represent label class
 
         """
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
         labels = cle.push(labels)
 
         selected_features, _ = self._make_features(self.classifier.feature_specification, labels, None, image)
@@ -132,7 +132,7 @@ class ObjectClassifier():
         gt: vector
         """
 
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
         pixel_statistics = cle.statistics_of_background_and_labelled_pixels(image, labels)
 
         if annotation is not None:
@@ -167,7 +167,7 @@ class ObjectClassifier():
         ..[1] https://github.com/clEsperanto/pyclesperanto_prototype/blob/master/demo/neighbors/mesh_between_touching_neighbors.ipynb
         """
         if touch_matrix is None:
-            import pyclesperanto_prototype as cle
+            import pyclesperanto as cle
             touch_matrix = cle.generate_touch_matrix(labels)
         return touch_matrix
 
@@ -188,7 +188,7 @@ class ObjectClassifier():
         ..[1] https://github.com/clEsperanto/pyclesperanto_prototype/blob/master/demo/neighbors/mesh_with_distances.ipynb
         """
         if distance_matrix is None:
-            import pyclesperanto_prototype as cle
+            import pyclesperanto as cle
             centroids = cle.centroids_of_labels(labels)
             distance_matrix = cle.generate_distance_matrix(centroids, centroids)
             cle.set_column(distance_matrix, 0, 0)
@@ -221,7 +221,7 @@ class ObjectClassifier():
         ground_truth: ndimage
             selected elements of provided ground truth where it's not 0
         """
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
         result = {}
         self._data = {}
         touch_matrix = None
@@ -230,7 +230,7 @@ class ObjectClassifier():
         neighbor_statistics = None
 
         if ground_truth is not None:
-            mask = ground_truth > 0
+            mask = np.asarray(ground_truth) > 0
 
         for key in features_to_select:
             vector = None
@@ -262,6 +262,8 @@ class ObjectClassifier():
 
             if vector is not None:
                 if ground_truth is not None:
+                    print("vector shape", vector.shape)
+                    print("mask shape", mask.shape)
                     result[key] = np.asarray([vector[mask]])[0]
                 else:
                     result[key] = np.asarray([vector])[0]

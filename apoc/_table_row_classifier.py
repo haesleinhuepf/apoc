@@ -123,7 +123,7 @@ class TableRowClassifier:
         output : np.ndarray
             An array containing the predicted class for each row.
         """
-        import pyclesperanto_prototype as cle
+        import pyclesperanto as cle
 
         ordered_features = self.order_feature_table(feature_table)
 
