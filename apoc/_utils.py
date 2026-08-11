@@ -201,19 +201,27 @@ def train_classifier_from_image_folders(classifier, features, **kwargs):
     import os
     from skimage.io import imread
     from pathlib import Path
+    from ._pixel_classifier import PixelClassifier
 
     any_folder = kwargs[list(kwargs.keys())[0]]
     file_list = os.listdir(any_folder)
     continue_training = False
-    for filename in file_list:
+    for i, filename in enumerate(file_list):
 
         # assemble parameters for training
         kwargs_to_pass = {
             'features': features,
             'continue_training': continue_training
         }
+        if isinstance(classifier, PixelClassifier):
+            kwargs_to_pass['skip_training'] = i < len(file_list) - 1
+        if "num_samples" in kwargs:
+            kwargs_to_pass["num_samples"] = kwargs["num_samples"]
+
+
         for key, value in kwargs.items():
-            kwargs_to_pass[key] = imread(Path(kwargs[key]) / filename)
+            if key not in ["num_samples"]:
+                kwargs_to_pass[key] = imread(Path(kwargs[key]) / filename)
 
         # run training
         classifier.train(**kwargs_to_pass)

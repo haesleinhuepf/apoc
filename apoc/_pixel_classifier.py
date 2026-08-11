@@ -77,7 +77,7 @@ class PixelClassifier():
         return str(self)
 
 
-    def train(self, features, ground_truth, image=None, continue_training : bool = False):
+    def train(self, features, ground_truth, image=None, continue_training : bool = False, skip_training : bool = False, num_samples: int = None):
         """
         Train a scikit-learn RandomForestClassifier and save it as OpenCL file to disk which
         can be later used for prediction.
@@ -95,6 +95,10 @@ class PixelClassifier():
             Features will then be generated from the channel images independently.
         continue_training : bool
             if training was done before, it appends the new data and continues training with the whole dataset.
+        skip_training : bool
+            If True, the classifier will not be trained, but the features and ground truth will be stored for later training.
+        num_samples : int
+            If not None, draw this many class-balanced random samples from (X, y) before training.
         """
         # make features and convert in the right format
         self.num_ground_truth_dimensions = len(ground_truth.shape)
@@ -109,15 +113,46 @@ class PixelClassifier():
                 X = np.concatenate((self._X, X),0)
                 y = np.concatenate((self._y, y),0)
 
-        self.classifier = RandomForestClassifier(max_depth=self.max_depth, n_estimators=self.num_ensembles, random_state=0)
-        self.classifier.fit(X, y)
-        self._feature_importances = self.classifier.feature_importances_
+        if num_samples is not None:
+            if num_samples <= 0:
+                raise ValueError("num_samples must be > 0 or None.")
+
+            classes = np.unique(y)
+            if len(classes) == 0:
+                raise ValueError("No annotated samples available for training.")
+
+            num_classes = len(classes)
+            base_count = num_samples // num_classes
+            remainder = num_samples % num_classes
+
+            rng = np.random.default_rng(0)
+            sampled_indices = []
+            for i, class_id in enumerate(classes):
+                class_indices = np.where(y == class_id)[0]
+                class_count = base_count + (1 if i < remainder else 0)
+                if class_count == 0:
+                    continue
+                replace = len(class_indices) < class_count
+                sampled_indices.append(rng.choice(class_indices, size=class_count, replace=replace))
+
+            sampled_indices = np.concatenate(sampled_indices)
+            rng.shuffle(sampled_indices)
+
+            X = X[sampled_indices]
+            y = y[sampled_indices]
+
+        
+        if not skip_training:
+            self.classifier = RandomForestClassifier(max_depth=self.max_depth, n_estimators=self.num_ensembles, random_state=0)
+            self.classifier.fit(X, y)
+            self._feature_importances = self.classifier.feature_importances_
+
+            # save as OpenCL
+            self.to_opencl_file(self.opencl_file)
 
         self._X = X
         self._y = y
 
-        # save as OpenCL
-        self.to_opencl_file(self.opencl_file)
 
     def predict(self, image=None, features=None):
         """
